@@ -1,14 +1,12 @@
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
+<?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuItem?>
-<BorderPane fx:controller="sample.MainPage"
+
+<BorderPane fx:controller="main.MainPage"
             xmlns:fx="http://javafx.com/fxml">
     <top>
         <MenuBar>
@@ -23,8 +21,8 @@
 
             <Menu text="Help">
 
-                <MenuItem text="License..."/>
-                <MenuItem text="About..."/>
+                <MenuItem text="License..." onAction="#openLicensePage"/>
+                <MenuItem text="About..." onAction="#openAboutPage"/>
 
             </Menu>
 
