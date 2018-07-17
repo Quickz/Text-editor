@@ -6,10 +6,7 @@ import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class MainPage
 {
@@ -23,7 +20,65 @@ public class MainPage
 
     public void open()
     {
-        System.out.println("open");
+        Stage fileDialog = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open");
+
+
+        File file = fileChooser.showOpenDialog(fileDialog);
+
+        if (file != null)
+        {
+            loadContent(file.getPath());
+        }
+    }
+
+    /**
+     * loads the text inside
+     * the text editor from the specified path
+     **/
+    private void loadContent(String path)
+    {
+        FileReader reader = null;
+        BufferedReader bufferedReader = null;
+
+        try
+        {
+            reader = new FileReader(path);
+            bufferedReader = new BufferedReader(reader);
+
+            String line;
+            while ((line = bufferedReader.readLine()) != null)
+            {
+                content.appendText(line + System.lineSeparator());
+            }
+        }
+        catch (IOException e)
+        {
+            System.out.println(
+                "Error in reading a file: " +
+                e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+                if (bufferedReader != null)
+                {
+                    bufferedReader.close();
+                }
+                if (reader != null)
+                {
+                    reader.close();
+                }
+            }
+            catch (IOException e)
+            {
+                System.out.println(
+                    "Error in closing file reader: " +
+                    e.getMessage());
+            }
+        }
     }
 
     public void save()
@@ -38,7 +93,7 @@ public class MainPage
     public void saveAs()
     {
         Stage fileDialog = new Stage();
-        FileChooser fileChooser= new FileChooser();
+        FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save As");
         fileChooser.getExtensionFilters().add(
             new FileChooser.ExtensionFilter(
@@ -94,7 +149,7 @@ public class MainPage
             catch (IOException e)
             {
                 System.out.println(
-                    "Error in closing writer: " +
+                    "Error in closing file writer: " +
                     e.getMessage());
             }
         }
