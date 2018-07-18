@@ -12,10 +12,10 @@
         <MenuBar>
 
             <Menu text="File">
-                <MenuItem text="New..." onAction="#newFile"/>
-                <MenuItem text="Open..." onAction="#open"/>
-                <MenuItem text="Save" onAction="#save"/>
-                <MenuItem text="Save As..." onAction="#saveAs"/>
+                <MenuItem text="New..." onAction="#newFile" accelerator="Shortcut+N"/>
+                <MenuItem text="Open..." onAction="#open" accelerator="Shortcut+O"/>
+                <MenuItem text="Save" onAction="#save" accelerator="Shortcut+S"/>
+                <MenuItem text="Save As..." onAction="#saveAs" accelerator="Shortcut+Shift+S"/>
                 <MenuItem text="Exit" onAction="#exit"/>
             </Menu>
 
