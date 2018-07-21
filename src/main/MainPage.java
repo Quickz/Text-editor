@@ -17,7 +17,7 @@ public class MainPage
 
     public void newFile()
     {
-        System.out.println("new");
+        content.clear();
     }
 
     public void open()
