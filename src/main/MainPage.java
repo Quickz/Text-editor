@@ -15,8 +15,11 @@ public class MainPage
     @FXML
     public TextArea content;
 
+    private String currentSaveDirectory;
+
     public void newFile()
     {
+        currentSaveDirectory = null;
         content.clear();
     }
 
@@ -31,6 +34,7 @@ public class MainPage
 
         if (file != null)
         {
+            currentSaveDirectory = file.getPath();
             loadContent(file.getPath());
         }
     }
@@ -85,11 +89,14 @@ public class MainPage
 
     public void save()
     {
-        // TODO:
-        // add ability to save a file without
-        // repeatedly having to open a file dialog
-        // to specify the path
-        saveAs();
+        if (currentSaveDirectory == null)
+        {
+            saveAs();
+        }
+        else
+        {
+            saveContent(currentSaveDirectory);
+        }
     }
 
     public void saveAs()
@@ -105,6 +112,7 @@ public class MainPage
 
         if (file != null)
         {
+            currentSaveDirectory = file.getPath();
             saveContent(file.getPath());
         }
     }
