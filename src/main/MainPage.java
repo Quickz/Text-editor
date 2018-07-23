@@ -3,6 +3,8 @@ package main;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
@@ -207,7 +209,8 @@ public class MainPage
     {
         if (controlKeyDown && e.getCode() == KeyCode.X)
         {
-            removeTextAreaLine(content);
+            // TODO: cut the whole line only if nothing is specifically selected
+            cutSelectedTextAreaLine(content);
         }
         else if (e.getCode() == KeyCode.CONTROL)
         {
@@ -228,7 +231,7 @@ public class MainPage
      * removes selected line inside the
      * specified text area
      **/
-    private void removeTextAreaLine(TextArea textArea)
+    private void cutSelectedTextAreaLine(TextArea textArea)
     {
         String contentText = textArea.getText();
 
@@ -266,6 +269,8 @@ public class MainPage
             lineToCut += contentText.charAt(z);
         }
 
+        copy(lineToCut);
+
         // assigning all of the text except the removed
         // line back to the text area
         String start = contentText.substring(0, previousLineEnding);
@@ -274,5 +279,20 @@ public class MainPage
 
         // moving the | thingy position
         textArea.positionCaret(previousLineEnding);
+    }
+
+    /**
+     * assigns the specified text to the
+     * copy clipboard
+     * ---------------------------------
+     * user can paste whatever has been copied
+     **/
+    private void copy(String text)
+    {
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        ClipboardContent content = new ClipboardContent();
+        content.putString(text);
+
+        clipboard.setContent(content);
     }
 }
