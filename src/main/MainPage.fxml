@@ -31,9 +31,7 @@
 
 
     <center>
-        <TextArea fx:id="content"
-                  onKeyPressed="#onContentKeyPress"
-                  onKeyReleased="#onContentKeyRelease"/>
+        <TextArea fx:id="content"/>
     </center>
 
 </BorderPane>

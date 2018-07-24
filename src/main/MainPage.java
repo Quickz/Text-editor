@@ -1,7 +1,9 @@
 package main;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -16,8 +18,16 @@ public class MainPage
 {
     @FXML
     public TextArea content;
-
+    private Stage stage;
     private String currentSaveDirectory;
+
+    public void onStageLoad(Stage stage)
+    {
+        stage.getScene().addEventFilter(
+                KeyEvent.KEY_PRESSED, e -> onKeyPress(e));
+        stage.getScene().addEventFilter(
+                KeyEvent.KEY_RELEASED, e -> onKeyRelease(e));
+    }
 
     public void newFile()
     {
@@ -205,11 +215,12 @@ public class MainPage
     private Boolean controlKeyDown = false;
 
     @FXML
-    private void onContentKeyPress(KeyEvent e)
+    private void onKeyPress(KeyEvent e)
     {
-        if (controlKeyDown && e.getCode() == KeyCode.X)
+        if (controlKeyDown &&
+            e.getCode() == KeyCode.X &&
+            content.getSelectedText().isEmpty())
         {
-            // TODO: cut the whole line only if nothing is specifically selected
             cutSelectedTextAreaLine(content);
         }
         else if (e.getCode() == KeyCode.CONTROL)
@@ -219,7 +230,7 @@ public class MainPage
     }
 
     @FXML
-    private void onContentKeyRelease(KeyEvent e)
+    private void onKeyRelease(KeyEvent e)
     {
         if (e.getCode() == KeyCode.CONTROL)
         {
