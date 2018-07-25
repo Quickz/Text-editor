@@ -1,14 +1,13 @@
 package main;
 
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -18,15 +17,110 @@ public class MainPage
 {
     @FXML
     public TextArea content;
+
+    @FXML
+    private VBox lineNumberContainer;
+
+    @FXML
+    private ScrollPane lineNumberScrollPane;
+
     private Stage stage;
     private String currentSaveDirectory;
 
+    @FXML
+    private void initialize()
+    {
+        // TEST BELOW
+        /*String text = "";
+        for (int i = 0; i < 100; i++)
+        {
+            if (i % 2 == 0)
+            {
+                text += "some random line\n";
+            }
+            else
+            {
+                text += "a sort of different line\n";
+            }
+        }
+        content.setText(text);*/
+        // TEST ABOVE
+
+        content.scrollTopProperty().addListener(
+                (obs, oldVal, newVal) -> onContentScroll());
+
+        updateLineNumberCount();
+    }
+
+    @FXML
+    private void onContentScroll()
+    {
+        // TODO:
+        // sync up text area scrollbar
+        // and scrollpane scrollbar
+
+        System.out.println(
+            "content scroll value: " +
+            content.getScrollTop());
+
+        System.out.println(
+            "line number scroll value: " +
+            lineNumberScrollPane.getVvalue());
+
+        //lineNumberScrollPane.setVvalue(content.getScrollTop());
+    }
+
+    /**
+     * basically runs after the page has loaded
+     * it runs after initialize method
+     **/
     public void onStageLoad(Stage stage)
     {
+        this.stage = stage;
         stage.getScene().addEventFilter(
                 KeyEvent.KEY_PRESSED, e -> onKeyPress(e));
         stage.getScene().addEventFilter(
                 KeyEvent.KEY_RELEASED, e -> onKeyRelease(e));
+    }
+
+    /**
+     * adds or removes line numbers
+     * until their count matches the
+     * line count of the content
+     **/
+    private void updateLineNumberCount()
+    {
+        int lineCount = getContentLineCount();
+        int numberCount = lineNumberContainer.getChildren().size();
+
+        // removing if too many
+        // (the user deleted some)
+        if (lineCount < numberCount)
+        {
+            lineNumberContainer.getChildren().remove(lineCount, numberCount);
+            return;
+        }
+
+        // adding if not enough
+        // (the user added new ones)
+        for (int i = numberCount; i < lineCount; i++)
+        {
+            addLineNumberEntry();
+        }
+    }
+
+    /**
+     * creates a label on the side
+     * which displays the number of the
+     * text line
+     **/
+    private void addLineNumberEntry()
+    {
+        int number = lineNumberContainer.getChildren().size() + 1;
+        Label label = new Label(Integer.toString(number));
+        label.setMinWidth(20);
+        label.setAlignment(Pos.BASELINE_RIGHT);
+        lineNumberContainer.getChildren().add(label);
     }
 
     public void newFile()
@@ -49,6 +143,24 @@ public class MainPage
             currentSaveDirectory = file.getPath();
             loadContent(file.getPath());
         }
+    }
+
+    /**
+     * returns the number of lines
+     * the content text area contains
+     **/
+    private int getContentLineCount()
+    {
+        String contentText = content.getText();
+        int count = 1;
+        for (int i = 0; i < contentText.length(); i++)
+        {
+            if (contentText.charAt(i) == '\n')
+            {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**
@@ -213,6 +325,12 @@ public class MainPage
     }
 
     private Boolean controlKeyDown = false;
+
+    @FXML
+    private void onContentKeyPress(KeyEvent e)
+    {
+        updateLineNumberCount();
+    }
 
     @FXML
     private void onKeyPress(KeyEvent e)
