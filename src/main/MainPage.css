@@ -1,4 +1,13 @@
-#content .scroll-pane {
-  /*  -fx-vbar-policy: never;
-    -fx-hbar-policy: as-needed;*/
+#lineNumberContainer {
+    -fx-padding: 2.5 0 0 0;
+}
+
+#lineNumberContainer .label {
+    -fx-font-size: 12;
+    -fx-font-family: Consolas;
+}
+
+#content {
+    -fx-font-size: 12;
+    -fx-font-family: Consolas;
 }

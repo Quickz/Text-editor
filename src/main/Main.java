@@ -26,11 +26,5 @@ public class Main extends Application
         controller.onStageLoad(primaryStage);
 
         primaryStage.show();
-
-        /*
-        Parent root = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
-        primaryStage.setTitle("Text Editor");
-        primaryStage.setScene(new Scene(root, 300, 275));
-        primaryStage.show();*/
     }
 }

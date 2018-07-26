@@ -30,44 +30,33 @@ public class MainPage
     @FXML
     private void initialize()
     {
-        // TEST BELOW
-        /*String text = "";
-        for (int i = 0; i < 100; i++)
-        {
-            if (i % 2 == 0)
-            {
-                text += "some random line\n";
-            }
-            else
-            {
-                text += "a sort of different line\n";
-            }
-        }
-        content.setText(text);*/
-        // TEST ABOVE
-
         content.scrollTopProperty().addListener(
-                (obs, oldVal, newVal) -> onContentScroll());
+            (obs, oldVal, newVal) -> onContentScroll());
+        lineNumberScrollPane.vvalueProperty().addListener(
+            (obs, oldVal, newVal) -> onLineNumberScroll());
 
         updateLineNumberCount();
     }
 
-    @FXML
+    /**
+     * when scrolling line number container
+     * the content element mirrors the scroll position
+     **/
+    private void onLineNumberScroll()
+    {
+        ScrollPane pane = ((ScrollPane)content.getChildrenUnmodifiable().get(0));
+        pane.setVvalue(lineNumberScrollPane.getVvalue());
+    }
+
+    /**
+     * when scrolling content text area
+     * the line number container element
+     * mirrors the scroll position
+     **/
     private void onContentScroll()
     {
-        // TODO:
-        // sync up text area scrollbar
-        // and scrollpane scrollbar
-
-        System.out.println(
-            "content scroll value: " +
-            content.getScrollTop());
-
-        System.out.println(
-            "line number scroll value: " +
-            lineNumberScrollPane.getVvalue());
-
-        //lineNumberScrollPane.setVvalue(content.getScrollTop());
+        ScrollPane pane = ((ScrollPane)content.getChildrenUnmodifiable().get(0));
+        lineNumberScrollPane.setVvalue(pane.getVvalue());
     }
 
     /**
@@ -118,7 +107,10 @@ public class MainPage
     {
         int number = lineNumberContainer.getChildren().size() + 1;
         Label label = new Label(Integer.toString(number));
-        label.setMinWidth(20);
+        label.setMinWidth(25);
+
+        label.setMinHeight(16);
+
         label.setAlignment(Pos.BASELINE_RIGHT);
         lineNumberContainer.getChildren().add(label);
     }
