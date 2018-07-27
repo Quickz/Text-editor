@@ -46,7 +46,7 @@
                 hbarPolicy="NEVER"
                 vbarPolicy="NEVER">
 
-            <VBox fx:id="lineNumberContainer" minWidth="25"/>
+            <VBox fx:id="lineNumberContainer" minWidth="40" maxWidth="40"/>
         </ScrollPane>
 
             <TextArea fx:id="content"

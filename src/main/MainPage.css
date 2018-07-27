@@ -5,6 +5,11 @@
 #lineNumberContainer .label {
     -fx-font-size: 12;
     -fx-font-family: Consolas;
+    -fx-padding: 0 10;
+}
+
+.lineNumberActive {
+    -fx-background-color: #c3c3c3;
 }
 
 #content {

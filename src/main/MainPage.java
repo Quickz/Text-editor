@@ -1,6 +1,8 @@
 package main;
 
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -27,6 +29,9 @@ public class MainPage
     private Stage stage;
     private String currentSaveDirectory;
 
+    // number of the line that is currently selected
+    private int selectedLine = 1;
+
     @FXML
     private void initialize()
     {
@@ -35,7 +40,89 @@ public class MainPage
         lineNumberScrollPane.vvalueProperty().addListener(
             (obs, oldVal, newVal) -> onLineNumberScroll());
 
+        content
+            .caretPositionProperty()
+            .addListener((obs, oldVal, newVal) ->
+                onContentCaretPositionChange(newVal));
+    }
+
+    /**
+     * basically runs after the page has loaded
+     * it runs after initialize method
+     **/
+    public void onStageLoad(Stage stage)
+    {
+        this.stage = stage;
+        stage.getScene().addEventFilter(
+                KeyEvent.KEY_PRESSED, e -> onKeyPress(e));
+        stage.getScene().addEventFilter(
+                KeyEvent.KEY_RELEASED, e -> onKeyRelease(e));
+
         updateLineNumberCount();
+    }
+
+    /**
+     * called when the caret (| thingy)
+     * position in the content changes
+     **/
+    private void onContentCaretPositionChange(Number position)
+    {
+        int lineNumber = getCurrentLine(content, (int)position);
+
+        // if false, a new line was created, so setting line
+        // number active at updateLineNumberCount() method instead
+        if (lineNumberContainer.getChildren().size() >= lineNumber)
+        {
+            setLineNumberLabelActive(lineNumber);
+        }
+    }
+
+    /**
+     * highlights the specified line number label
+     * and removes the highlight from the previous one
+     * -----------------------------------------------
+     * used to clearly show which line is currently selected
+     **/
+    private void setLineNumberLabelActive(int number)
+    {
+        var lineNumberLabels = lineNumberContainer.getChildren();
+
+        // de-highlighting previous active line
+        lineNumberLabels
+            .get(selectedLine - 1)
+            .getStyleClass()
+            .remove("lineNumberActive");
+
+        // highlighting the newly selected line
+        lineNumberLabels
+            .get(number - 1)
+            .getStyleClass()
+            .add("lineNumberActive");
+
+        // saving the active line number
+        selectedLine = number;
+    }
+
+    /**
+     * returns an integer (starting from 1)
+     * which tells which line is currently selected
+     **/
+    private int getCurrentLine(TextArea textArea, int position)
+    {
+        String contentText = textArea.getText();
+        int lineNumber = 0;
+        for (int i = 0; i < contentText.length(); i++)
+        {
+            if (contentText.charAt(i) == '\n')
+            {
+                lineNumber++;
+                if (i >= position)
+                {
+                    return lineNumber;
+                }
+            }
+        }
+        return lineNumber + 1;
     }
 
     /**
@@ -57,19 +144,6 @@ public class MainPage
     {
         ScrollPane pane = ((ScrollPane)content.getChildrenUnmodifiable().get(0));
         lineNumberScrollPane.setVvalue(pane.getVvalue());
-    }
-
-    /**
-     * basically runs after the page has loaded
-     * it runs after initialize method
-     **/
-    public void onStageLoad(Stage stage)
-    {
-        this.stage = stage;
-        stage.getScene().addEventFilter(
-                KeyEvent.KEY_PRESSED, e -> onKeyPress(e));
-        stage.getScene().addEventFilter(
-                KeyEvent.KEY_RELEASED, e -> onKeyRelease(e));
     }
 
     /**
@@ -96,6 +170,13 @@ public class MainPage
         {
             addLineNumberEntry();
         }
+
+
+        int lineNumber = getCurrentLine(
+                content,
+                (int)content.getCaretPosition());
+
+        setLineNumberLabelActive(lineNumber);
     }
 
     /**
@@ -107,8 +188,7 @@ public class MainPage
     {
         int number = lineNumberContainer.getChildren().size() + 1;
         Label label = new Label(Integer.toString(number));
-        label.setMinWidth(25);
-
+        label.setMinWidth(40);
         label.setMinHeight(16);
 
         label.setAlignment(Pos.BASELINE_RIGHT);
