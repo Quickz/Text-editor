@@ -12,7 +12,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.geometry.Insets?>
-<BorderPane fx:controller="main.MainPage"
+<BorderPane fx:id="mainContainer"
+            fx:controller="main.MainPage"
             xmlns:fx="http://javafx.com/fxml"
             stylesheets="@MainPage.css">
     <top>

@@ -1,14 +1,13 @@
 package main;
 
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -19,6 +18,9 @@ public class MainPage
 {
     @FXML
     public TextArea content;
+
+    @FXML
+    private BorderPane mainContainer;
 
     @FXML
     private VBox lineNumberContainer;
@@ -35,6 +37,8 @@ public class MainPage
     @FXML
     private void initialize()
     {
+        DeveloperCommands.FillTextArea(content);
+
         content.scrollTopProperty().addListener(
             (obs, oldVal, newVal) -> onContentScroll());
         lineNumberScrollPane.vvalueProperty().addListener(
@@ -44,6 +48,10 @@ public class MainPage
             .caretPositionProperty()
             .addListener((obs, oldVal, newVal) ->
                 onContentCaretPositionChange(newVal));
+
+        lineNumberScrollPane
+            .focusedProperty()
+            .addListener(e -> onLineNumberContainerFocus());
     }
 
     /**
@@ -54,11 +62,20 @@ public class MainPage
     {
         this.stage = stage;
         stage.getScene().addEventFilter(
-                KeyEvent.KEY_PRESSED, e -> onKeyPress(e));
+            KeyEvent.KEY_PRESSED, e -> onKeyPress(e));
         stage.getScene().addEventFilter(
-                KeyEvent.KEY_RELEASED, e -> onKeyRelease(e));
+            KeyEvent.KEY_RELEASED, e -> onKeyRelease(e));
 
         updateLineNumberCount();
+    }
+
+    /**
+     * changes focus to content
+     *
+     **/
+    private void onLineNumberContainerFocus()
+    {
+        content.requestFocus();
     }
 
     /**
@@ -173,8 +190,8 @@ public class MainPage
 
 
         int lineNumber = getCurrentLine(
-                content,
-                (int)content.getCaretPosition());
+            content,
+            (int)content.getCaretPosition());
 
         setLineNumberLabelActive(lineNumber);
     }
@@ -191,8 +208,64 @@ public class MainPage
         label.setMinWidth(40);
         label.setMinHeight(16);
 
+        label.setOnMouseClicked(e -> lineNumberLabelOnClick(number));
+
         label.setAlignment(Pos.BASELINE_RIGHT);
         lineNumberContainer.getChildren().add(label);
+    }
+
+    /**
+     * selects the whole line of the
+     * content text that belongs to the label
+     **/
+    private void lineNumberLabelOnClick(int number)
+    {
+        // first line selected
+        if (number == 1)
+        {
+            content.positionCaret(0);
+            return;
+        }
+
+        // used to select the previous line
+        // will then modify position forward to select
+        // the beginning of the line instead of the end
+        number--;
+
+        String contentText = content.getText();
+        int currentLine = 0;
+        int position = 0;
+
+        while (position < contentText.length())
+        {
+            if (contentText.charAt(position) == '\n')
+            {
+                currentLine++;
+                if (currentLine >= number)
+                {
+                    break;
+                }
+            }
+            position++;
+        }
+
+        // position of the start of the line
+        position++;
+
+        // moving the car position
+        content.positionCaret(position);
+
+        int endPosition = position;
+
+        while (endPosition < contentText.length() &&
+               contentText.charAt(endPosition) != '\n')
+        {
+            endPosition++;
+        }
+
+        // selecting content from current caret
+        // position to the specified position
+        content.selectPositionCaret(endPosition + 1);
     }
 
     public void newFile()
