@@ -8,6 +8,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -52,6 +54,10 @@ public class MainPage
         lineNumberScrollPane
             .focusedProperty()
             .addListener(e -> onLineNumberContainerFocus());
+
+        // made the hbox element stretch based
+        // on the content text field
+        HBox.setHgrow(content, Priority.ALWAYS);
     }
 
     /**

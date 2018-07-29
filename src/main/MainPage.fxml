@@ -40,15 +40,15 @@
     <center>
         <HBox>
 
-        <ScrollPane
-                fx:id="lineNumberScrollPane"
-                fitToWidth="true"
-                fitToHeight="true"
-                hbarPolicy="NEVER"
-                vbarPolicy="NEVER">
+            <ScrollPane
+                    fx:id="lineNumberScrollPane"
+                    fitToWidth="true"
+                    fitToHeight="true"
+                    hbarPolicy="NEVER"
+                    vbarPolicy="NEVER">
 
-            <VBox fx:id="lineNumberContainer" minWidth="40" maxWidth="40"/>
-        </ScrollPane>
+                <VBox fx:id="lineNumberContainer" minWidth="40" maxWidth="40"/>
+            </ScrollPane>
 
             <TextArea fx:id="content"
                       onKeyPressed="#onContentKeyPress"/>
