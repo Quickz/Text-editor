@@ -55,4 +55,10 @@
         </HBox>
     </center>
 
+    <bottom>
+        <HBox>
+            <Label fx:id="bottomLineNumber">Line: </Label>
+        </HBox>
+    </bottom>
+
 </BorderPane>

@@ -30,6 +30,9 @@ public class MainPage
     @FXML
     private ScrollPane lineNumberScrollPane;
 
+    @FXML
+    private Label bottomLineNumber;
+
     private Stage stage;
     private String currentSaveDirectory;
 
@@ -124,6 +127,17 @@ public class MainPage
 
         // saving the active line number
         selectedLine = number;
+
+        UpdateBottomLineNumber();
+    }
+
+    /**
+     * updates the line
+     * number at the bottom
+     **/
+    private void UpdateBottomLineNumber()
+    {
+        bottomLineNumber.setText("Line: " + selectedLine);
     }
 
     /**
