@@ -58,6 +58,7 @@
     <bottom>
         <HBox>
             <Label fx:id="bottomLineNumber">Line: </Label>
+            <Label fx:id="bottomColumnNumber">, Column: </Label>
         </HBox>
     </bottom>
 

@@ -33,6 +33,9 @@ public class MainPage
     @FXML
     private Label bottomLineNumber;
 
+    @FXML
+    private Label bottomColumnNumber;
+
     private Stage stage;
     private String currentSaveDirectory;
 
@@ -76,6 +79,7 @@ public class MainPage
             KeyEvent.KEY_RELEASED, e -> onKeyRelease(e));
 
         updateLineNumberCount();
+        updateBottomColumnNumber();
     }
 
     /**
@@ -94,6 +98,8 @@ public class MainPage
     private void onContentCaretPositionChange(Number position)
     {
         int lineNumber = getCurrentLine(content, (int)position);
+
+        updateBottomColumnNumber();
 
         // if false, a new line was created, so setting line
         // number active at updateLineNumberCount() method instead
@@ -128,16 +134,27 @@ public class MainPage
         // saving the active line number
         selectedLine = number;
 
-        UpdateBottomLineNumber();
+        updateBottomLineNumber();
     }
 
     /**
      * updates the line
      * number at the bottom
      **/
-    private void UpdateBottomLineNumber()
+    private void updateBottomLineNumber()
     {
         bottomLineNumber.setText("Line: " + selectedLine);
+    }
+
+    /**
+     * updates the column
+     * number at the bottom
+     **/
+    private void updateBottomColumnNumber()
+    {
+        int position = content.getCaretPosition();
+        bottomColumnNumber.setText(
+            ", Column: " + getCurrentColumn(content, position));
     }
 
     /**
@@ -146,11 +163,11 @@ public class MainPage
      **/
     private int getCurrentLine(TextArea textArea, int position)
     {
-        String contentText = textArea.getText();
+        String text = textArea.getText();
         int lineNumber = 0;
-        for (int i = 0; i < contentText.length(); i++)
+        for (int i = 0; i < text.length(); i++)
         {
-            if (contentText.charAt(i) == '\n')
+            if (text.charAt(i) == '\n')
             {
                 lineNumber++;
                 if (i >= position)
@@ -160,6 +177,31 @@ public class MainPage
             }
         }
         return lineNumber + 1;
+    }
+
+    /**
+     * returns an integer (starting from 1)
+     * which tells which column in a line
+     * is currently selected
+     **/
+    private int getCurrentColumn(TextArea textArea, int position)
+    {
+        String text = textArea.getText();
+        int columnNumber = 0;
+        for (int i = 0; i < text.length(); i++)
+        {
+            columnNumber++;
+            if (i >= position)
+            {
+                return columnNumber;
+            }
+
+            if (text.charAt(i) == '\n')
+            {
+                columnNumber = 0;
+            }
+        }
+        return columnNumber + 1;
     }
 
     /**
