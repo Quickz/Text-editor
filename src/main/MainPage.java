@@ -36,6 +36,9 @@ public class MainPage
     @FXML
     private Label bottomColumnNumber;
 
+    @FXML
+    private Label bottomLineLengthNumber;
+
     private Stage stage;
     private String currentSaveDirectory;
 
@@ -80,6 +83,7 @@ public class MainPage
 
         updateLineNumberCount();
         updateBottomColumnNumber();
+        updateBottomLengthNumber();
     }
 
     /**
@@ -100,6 +104,7 @@ public class MainPage
         int lineNumber = getCurrentLine(content, (int)position);
 
         updateBottomColumnNumber();
+        updateBottomLengthNumber();
 
         // if false, a new line was created, so setting line
         // number active at updateLineNumberCount() method instead
@@ -158,6 +163,18 @@ public class MainPage
     }
 
     /**
+     * updates the length value at the bottom
+     * of the currently selected line
+     **/
+    private void updateBottomLengthNumber()
+    {
+        int position = getCurrentLine(content, content.getCaretPosition());
+        bottomLineLengthNumber.setText(
+            ", Length: " +
+            getCurrentLineLength(content, position));
+    }
+
+    /**
      * returns an integer (starting from 1)
      * which tells which line is currently selected
      **/
@@ -202,6 +219,38 @@ public class MainPage
             }
         }
         return columnNumber + 1;
+    }
+
+    /**
+     * returns an integer which
+     * represents the length of the
+     * currently selected line
+     **/
+    private int getCurrentLineLength(TextArea textArea, int line)
+    {
+        String text = textArea.getText();
+        int length = 0;
+        int currentLine = 0;
+
+        if (line != 1)
+        {
+            line--;
+        }
+
+        for (int i = 0; i < text.length(); i++)
+        {
+            if (text.charAt(i) == '\n')
+            {
+                if (line == currentLine)
+                {
+                    return length - 1;
+                }
+                length = 0;
+                currentLine++;
+            }
+            length++;
+        }
+        return length - 1;
     }
 
     /**
