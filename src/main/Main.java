@@ -16,6 +16,11 @@ public class Main extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
+        initializeApp(primaryStage);
+    }
+
+    private void initializeApp(Stage primaryStage) throws Exception
+    {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainPage.fxml"));
         Parent root = (Parent)loader.load();
 

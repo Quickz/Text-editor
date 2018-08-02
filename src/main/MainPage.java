@@ -48,7 +48,7 @@ public class MainPage
     @FXML
     private void initialize()
     {
-        DeveloperCommands.FillTextArea(content);
+        //DeveloperCommands.FillTextArea(content);
 
         content.scrollTopProperty().addListener(
             (obs, oldVal, newVal) -> onContentScroll());
@@ -381,8 +381,38 @@ public class MainPage
 
     public void newFile()
     {
-        currentSaveDirectory = null;
-        content.clear();
+        try
+        {
+            if (content.getText().equals(""))
+            {
+                currentSaveDirectory = null;
+                content.clear();
+                return;
+            }
+
+            String response = NewFileWarning.generate();
+
+            if (response.equals("save"))
+            {
+                boolean savedSuccessfully = save();
+                if (savedSuccessfully)
+                {
+                    currentSaveDirectory = null;
+                    content.clear();
+                }
+            }
+            else if (response.equals("dontSave"))
+            {
+                currentSaveDirectory = null;
+                content.clear();
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+
     }
 
     public void open()
@@ -467,19 +497,28 @@ public class MainPage
         }
     }
 
-    public void save()
+    /**
+     * saves current text content
+     * returns true if it was successfully saved
+     **/
+    public boolean save()
     {
         if (currentSaveDirectory == null)
         {
-            saveAs();
+            return saveAs();
         }
         else
         {
             saveContent(currentSaveDirectory);
+            return true;
         }
     }
 
-    public void saveAs()
+    /**
+     * saves current text content
+     * returns true if it was successfully saved
+     **/
+    public boolean saveAs()
     {
         Stage fileDialog = new Stage();
         FileChooser fileChooser = new FileChooser();
@@ -494,7 +533,9 @@ public class MainPage
         {
             currentSaveDirectory = file.getPath();
             saveContent(file.getPath());
+            return true;
         }
+        return false;
     }
 
     /**
