@@ -229,6 +229,13 @@ public class MainPage
     private int getCurrentLineLength(TextArea textArea, int line)
     {
         String text = textArea.getText();
+
+        // empty content
+        if (text.length() == 0)
+        {
+            return 0;
+        }
+
         int length = 0;
         int currentLine = 0;
 
