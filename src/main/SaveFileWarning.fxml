@@ -9,7 +9,7 @@
 <?import javafx.geometry.Insets?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="main.NewFileWarning"
+            fx:controller="main.SaveFileWarning"
             prefWidth="300.0"
             prefHeight="100.0">
 

@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class NewFileWarning
+public class SaveFileWarning
 {
     private Stage stage;
 
@@ -52,7 +52,7 @@ public class NewFileWarning
     public static String generate() throws Exception
     {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource("NewFileWarning.fxml"));
+        loader.setLocation(Main.class.getResource("SaveFileWarning.fxml"));
         Scene scene = new Scene(loader.load());
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -60,7 +60,7 @@ public class NewFileWarning
         stage.setResizable(false);
         stage.setScene(scene);
 
-        NewFileWarning controller = loader.getController();
+        SaveFileWarning controller = loader.getController();
         controller.onStageLoad(stage);
 
         stage.showAndWait();

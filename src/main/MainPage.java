@@ -1,6 +1,8 @@
 package main;
 
 import javafx.application.Platform;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -13,6 +15,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.*;
 
@@ -76,6 +79,10 @@ public class MainPage
     public void onStageLoad(Stage stage)
     {
         this.stage = stage;
+
+        // called when closing app using X button
+        stage.setOnCloseRequest(e -> onCloseButtonClick(e));
+
         stage.getScene().addEventFilter(
             KeyEvent.KEY_PRESSED, e -> onKeyPress(e));
         stage.getScene().addEventFilter(
@@ -397,7 +404,7 @@ public class MainPage
                 return;
             }
 
-            String response = NewFileWarning.generate();
+            String response = SaveFileWarning.generate();
 
             if (response.equals("save"))
             {
@@ -593,9 +600,50 @@ public class MainPage
         }
     }
 
+    /**
+     * called when closing
+     * the app using the X button
+     * at the top right corner
+     **/
+    private void onCloseButtonClick(WindowEvent e)
+    {
+        // canceling the default functionality
+        // of the button
+        e.consume();
+        // exiting as usual using a written method
+        exit();
+    }
+
     public void exit()
     {
-        Platform.exit();
+        try
+        {
+            if (content.getText().equals("") &&
+                currentSaveDirectory == null)
+            {
+                Platform.exit();
+                return;
+            }
+
+            String response = SaveFileWarning.generate();
+
+            if (response.equals("save"))
+            {
+                boolean savedSuccessfully = save();
+                if (savedSuccessfully)
+                {
+                    Platform.exit();
+                }
+            }
+            else if (response.equals("dontSave"))
+            {
+                Platform.exit();
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
     }
 
     @FXML
