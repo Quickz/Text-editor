@@ -43,7 +43,13 @@ public class MainPage
     private Label bottomLineLengthNumber;
 
     private Stage stage;
+
+    // true if content was modified
+    // since the last time it was modified
+    // or set to a new one
     private String currentSaveDirectory;
+
+    private boolean contentWasModified = false;
 
     // number of the line that is currently selected
     private int selectedLine = 1;
@@ -62,6 +68,10 @@ public class MainPage
             .caretPositionProperty()
             .addListener((obs, oldVal, newVal) ->
                 onContentCaretPositionChange(newVal));
+
+        content
+                .textProperty()
+                .addListener(e -> onContentTextChange());
 
         lineNumberScrollPane
             .focusedProperty()
@@ -397,10 +407,11 @@ public class MainPage
     {
         try
         {
-            if (content.getText().equals(""))
+            if (!contentWasModified)
             {
                 currentSaveDirectory = null;
                 content.clear();
+                contentWasModified = false;
                 return;
             }
 
@@ -413,12 +424,14 @@ public class MainPage
                 {
                     currentSaveDirectory = null;
                     content.clear();
+                    contentWasModified = false;
                 }
             }
             else if (response.equals("dontSave"))
             {
                 currentSaveDirectory = null;
                 content.clear();
+                contentWasModified = false;
             }
         }
         catch (Exception e)
@@ -435,13 +448,13 @@ public class MainPage
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open");
 
-
         File file = fileChooser.showOpenDialog(fileDialog);
 
         if (file != null)
         {
             currentSaveDirectory = file.getPath();
             loadContent(file.getPath());
+            contentWasModified = false;
         }
     }
 
@@ -524,6 +537,7 @@ public class MainPage
         else
         {
             saveContent(currentSaveDirectory);
+            contentWasModified = false;
             return true;
         }
     }
@@ -546,6 +560,7 @@ public class MainPage
         if (file != null)
         {
             currentSaveDirectory = file.getPath();
+            contentWasModified = false;
             saveContent(file.getPath());
             return true;
         }
@@ -618,8 +633,7 @@ public class MainPage
     {
         try
         {
-            if (content.getText().equals("") &&
-                currentSaveDirectory == null)
+            if (!contentWasModified)
             {
                 Platform.exit();
                 return;
@@ -697,6 +711,15 @@ public class MainPage
         {
             controlKeyDown = true;
         }
+    }
+
+    /**
+     * called when the text inside
+     * the content changes
+     **/
+    private void onContentTextChange()
+    {
+        contentWasModified = true;
     }
 
     @FXML
