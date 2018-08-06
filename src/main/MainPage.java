@@ -44,6 +44,8 @@ public class MainPage
 
     private Stage stage;
 
+    private ContentTab contentTab;
+
     // true if content was modified
     // since the last time it was modified
     // or set to a new one
@@ -70,8 +72,10 @@ public class MainPage
                 onContentCaretPositionChange(newVal));
 
         content
-                .textProperty()
-                .addListener(e -> onContentTextChange());
+            .textProperty()
+            .addListener(e -> onContentTextChange());
+
+        contentTab = new ContentTab(content);
 
         lineNumberScrollPane
             .focusedProperty()
@@ -438,8 +442,6 @@ public class MainPage
         {
             System.out.println(e.getMessage());
         }
-
-
     }
 
     public void open()
@@ -705,7 +707,11 @@ public class MainPage
             e.getCode() == KeyCode.X &&
             content.getSelectedText().isEmpty())
         {
-            cutSelectedTextAreaLine(content);
+            int newCaretPosition = contentTab
+                .cutLine(content.getCaretPosition());
+
+            // moving the | thingy position
+            content.positionCaret(newCaretPosition);
         }
         else if (e.getCode() == KeyCode.CONTROL)
         {
@@ -729,74 +735,5 @@ public class MainPage
         {
             controlKeyDown = false;
         }
-    }
-
-    /**
-     * removes selected line inside the
-     * specified text area
-     **/
-    private void cutSelectedTextAreaLine(TextArea textArea)
-    {
-        String contentText = textArea.getText();
-
-        if (contentText.length() == 0)
-        {
-            return;
-        }
-
-        int position = textArea.getCaretPosition();
-        int lineNumber = 0;
-        int previousLineEnding = 0;
-        int lastLineEnding = contentText.length() - 1;
-
-        // finding out the line that has to be deleted
-        for (int i = 0; i < contentText.length(); i++)
-        {
-            if (contentText.charAt(i) == '\n')
-            {
-                lineNumber++;
-                if (i >= position)
-                {
-                    lastLineEnding = i;
-                    break;
-                }
-                previousLineEnding = i;
-            }
-        }
-
-        previousLineEnding = lineNumber < 2 ? 0 : previousLineEnding + 1;
-        lastLineEnding++;
-
-        String lineToCut = "";
-        for (int z = previousLineEnding; z < lastLineEnding; z++)
-        {
-            lineToCut += contentText.charAt(z);
-        }
-
-        copy(lineToCut);
-
-        // assigning all of the text except the removed
-        // line back to the text area
-        String start = contentText.substring(0, previousLineEnding);
-        String end = contentText.substring(lastLineEnding);
-        textArea.setText(start + end);
-
-        // moving the | thingy position
-        textArea.positionCaret(previousLineEnding);
-    }
-
-    /**
-     * assigns the specified text to the
-     * copy clipboard
-     * ---------------------------------
-     * user can paste whatever has been copied
-     **/
-    private void copy(String text)
-    {
-        Clipboard clipboard = Clipboard.getSystemClipboard();
-        ClipboardContent content = new ClipboardContent();
-        content.putString(text);
-
-        clipboard.setContent(content);
     }
 }
