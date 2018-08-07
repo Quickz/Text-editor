@@ -122,7 +122,7 @@ public class MainPage
      **/
     private void onContentCaretPositionChange(Number position)
     {
-        int lineNumber = getCurrentLine(content, (int)position);
+        int lineNumber = contentTab.getLine((int)position);
 
         updateBottomColumnNumber();
         updateBottomLengthNumber();
@@ -180,7 +180,7 @@ public class MainPage
     {
         int position = content.getCaretPosition();
         bottomColumnNumber.setText(
-            ", Column: " + getCurrentColumn(content, position));
+            ", Column: " + contentTab.getColumn(position));
     }
 
     /**
@@ -189,96 +189,10 @@ public class MainPage
      **/
     private void updateBottomLengthNumber()
     {
-        int position = getCurrentLine(content, content.getCaretPosition());
+        int line = contentTab.getLine(content.getCaretPosition());
         bottomLineLengthNumber.setText(
             ", Length: " +
-            getCurrentLineLength(content, position));
-    }
-
-    /**
-     * returns an integer (starting from 1)
-     * which tells which line is currently selected
-     **/
-    private int getCurrentLine(TextArea textArea, int position)
-    {
-        String text = textArea.getText();
-        int lineNumber = 0;
-        for (int i = 0; i < text.length(); i++)
-        {
-            if (text.charAt(i) == '\n')
-            {
-                lineNumber++;
-                if (i >= position)
-                {
-                    return lineNumber;
-                }
-            }
-        }
-        return lineNumber + 1;
-    }
-
-    /**
-     * returns an integer (starting from 1)
-     * which tells which column in a line
-     * is currently selected
-     **/
-    private int getCurrentColumn(TextArea textArea, int position)
-    {
-        String text = textArea.getText();
-        int columnNumber = 0;
-        for (int i = 0; i < text.length(); i++)
-        {
-            columnNumber++;
-            if (i >= position)
-            {
-                return columnNumber;
-            }
-
-            if (text.charAt(i) == '\n')
-            {
-                columnNumber = 0;
-            }
-        }
-        return columnNumber + 1;
-    }
-
-    /**
-     * returns an integer which
-     * represents the length of the
-     * currently selected line
-     **/
-    private int getCurrentLineLength(TextArea textArea, int line)
-    {
-        String text = textArea.getText();
-
-        // empty content
-        if (text.length() == 0)
-        {
-            return 0;
-        }
-
-        int length = 0;
-        int currentLine = 0;
-
-        if (line != 1)
-        {
-            line--;
-        }
-
-        for (int i = 0; i < text.length(); i++)
-        {
-            if (text.charAt(i) == '\n')
-            {
-                if (line == currentLine)
-                {
-                    return length - 1;
-                }
-                length = 0;
-                currentLine++;
-            }
-            length++;
-        }
-        return length - 1;
+            contentTab.getLineLength(line));
     }
 
     /**
@@ -309,7 +223,7 @@ public class MainPage
      **/
     private void updateLineNumberCount()
     {
-        int lineCount = getContentLineCount();
+        int lineCount = contentTab.getLineCount();
         int numberCount = lineNumberContainer.getChildren().size();
 
         // removing if too many
@@ -327,11 +241,7 @@ public class MainPage
             addLineNumberEntry();
         }
 
-
-        int lineNumber = getCurrentLine(
-            content,
-            (int)content.getCaretPosition());
-
+        int lineNumber = contentTab.getLine(content.getCaretPosition());
         setLineNumberLabelActive(lineNumber);
     }
 
@@ -458,24 +368,6 @@ public class MainPage
             loadContent(file.getPath());
             contentWasModified = false;
         }
-    }
-
-    /**
-     * returns the number of lines
-     * the content text area contains
-     **/
-    private int getContentLineCount()
-    {
-        String contentText = content.getText();
-        int count = 1;
-        for (int i = 0; i < contentText.length(); i++)
-        {
-            if (contentText.charAt(i) == '\n')
-            {
-                count++;
-            }
-        }
-        return count;
     }
 
     /**
@@ -631,7 +523,8 @@ public class MainPage
         exit();
     }
 
-    public void exit()
+    @FXML
+    private void exit()
     {
         try
         {

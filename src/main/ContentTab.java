@@ -90,6 +90,111 @@ public class ContentTab
         clipboard.setContent(content);
     }
 
+    /**
+     * returns the number of lines
+     * the content tab contains
+     **/
+    public int getLineCount()
+    {
+        String text = getText();
+        int count = 1;
+        for (int i = 0; i < text.length(); i++)
+        {
+            if (text.charAt(i) == '\n')
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * returns an integer which
+     * represents the length of the
+     * currently selected line
+     **/
+    public int getLineLength(int line)
+    {
+        String text = getText();
+
+        // empty content
+        if (text.length() == 0)
+        {
+            return 0;
+        }
+
+        int length = 0;
+        int currentLine = 0;
+
+        if (line != 1)
+        {
+            line--;
+        }
+
+        for (int i = 0; i < text.length(); i++)
+        {
+            if (text.charAt(i) == '\n')
+            {
+                if (line == currentLine)
+                {
+                    return length - 1;
+                }
+                length = 0;
+                currentLine++;
+            }
+            length++;
+        }
+        return length - 1;
+    }
+
+    /**
+     * returns an integer (starting from 1)
+     * which tells the column in a line
+     * based on the position in the text
+     **/
+    public int getColumn(int positionInText)
+    {
+        String text = getText();
+        int columnNumber = 0;
+        for (int i = 0; i < text.length(); i++)
+        {
+            columnNumber++;
+            if (i >= positionInText)
+            {
+                return columnNumber;
+            }
+
+            if (text.charAt(i) == '\n')
+            {
+                columnNumber = 0;
+            }
+        }
+        return columnNumber + 1;
+    }
+
+    /**
+     * returns an integer (starting from 1)
+     * which tells which line is in
+     * the specified position
+     **/
+    public int getLine(int positionInText)
+    {
+        String text = getText();
+        int lineNumber = 0;
+        for (int i = 0; i < text.length(); i++)
+        {
+            if (text.charAt(i) == '\n')
+            {
+                lineNumber++;
+                if (i >= positionInText)
+                {
+                    return lineNumber;
+                }
+            }
+        }
+        return lineNumber + 1;
+    }
+
     public String getText()
     {
         return textProperty.get();
