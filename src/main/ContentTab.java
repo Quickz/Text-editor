@@ -123,14 +123,22 @@ public class ContentTab
             return 0;
         }
 
+        if (line == 1)
+        {
+            for (int i = 0; i < text.length(); i++)
+            {
+                if (text.charAt(i) == '\n')
+                {
+                    return i;
+                }
+            }
+            return text.length();
+        }
+
         int length = 0;
         int currentLine = 0;
 
-        if (line != 1)
-        {
-            line--;
-        }
-
+        line--;
         for (int i = 0; i < text.length(); i++)
         {
             if (text.charAt(i) == '\n')
