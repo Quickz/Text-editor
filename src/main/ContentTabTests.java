@@ -36,4 +36,46 @@ public class ContentTabTests
         int lineLength = contentTab.getLineLength(3);
         Assertions.assertEquals(41, lineLength);
     }
+
+    @Test
+    public void lineCountOfEmptyContent()
+    {
+        ContentTab contentTab = new ContentTab();
+        int lineCount = contentTab.getLineCount();
+        Assertions.assertEquals(1, lineCount);
+    }
+
+    @Test
+    public void lineCountOfContent()
+    {
+        ContentTab contentTab = new ContentTab();
+        contentTab.setText(
+            "Some fabulous\n" +
+            "text for testing\n" +
+            "line count method");
+        int lineCount = contentTab.getLineCount();
+        Assertions.assertEquals(3, lineCount);
+    }
+
+    @Test
+    public void cutLinesFromContent()
+    {
+        ContentTab contentTab = new ContentTab();
+        contentTab.setText(
+            "Several lines\n" +
+            "of text\n" +
+            "for testing cut line method\n" +
+            "and make sure it works\n" +
+            "properly");
+
+        contentTab.cutLine(15, false);
+        contentTab.cutLine(50, false);
+
+        String expected =
+            "Several lines\n" +
+            "for testing cut line method\n" +
+            "properly";
+
+        Assertions.assertEquals(expected, contentTab.getText());
+    }
 }

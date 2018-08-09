@@ -28,7 +28,7 @@ public class ContentTab
      * returns a new position
      * after the changes
      **/
-    public int cutLine(int position)
+    public int cutLine(int position, boolean copyTheLine)
     {
         String text = getText();
         if (text.length() == 0)
@@ -64,7 +64,10 @@ public class ContentTab
             lineToCut += text.charAt(z);
         }
 
-        copy(lineToCut);
+        if (copyTheLine)
+        {
+            copy(lineToCut);
+        }
 
         // assigning all of the text except the removed
         // line back to the text area
@@ -73,6 +76,11 @@ public class ContentTab
         setText(start + end);
 
         return previousLineEnding;
+    }
+
+    public int cutLine(int position)
+    {
+        return cutLine(position, true);
     }
 
     /**
