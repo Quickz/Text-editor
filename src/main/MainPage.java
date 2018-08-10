@@ -127,6 +127,12 @@ public class MainPage
         updateBottomColumnNumber();
         updateBottomLengthNumber();
 
+        updateLineNumberCount();
+
+        // updating scroll position since there may be
+        // new line entry from udating line number count
+        setLineNumberScrollValueToContentValue();
+
         // if false, a new line was created, so setting line
         // number active at updateLineNumberCount() method instead
         if (lineNumberContainer.getChildren().size() >= lineNumber)
@@ -212,12 +218,22 @@ public class MainPage
      **/
     private void onContentScroll()
     {
+        setLineNumberScrollValueToContentValue();
+    }
+
+    /**
+     * assigns the content scroll position
+     * to the line number container scroll
+     * position
+     **/
+    private void setLineNumberScrollValueToContentValue()
+    {
         ScrollPane pane = ((ScrollPane)content.getChildrenUnmodifiable().get(0));
         lineNumberScrollPane.setVvalue(pane.getVvalue());
     }
 
     /**
-     * adds or removes line numbers
+     * adds or removes line numbers (labels)
      * until their count matches the
      * line count of the content
      **/
@@ -586,12 +602,6 @@ public class MainPage
     }
 
     private Boolean controlKeyDown = false;
-
-    @FXML
-    private void onContentKeyPress(KeyEvent e)
-    {
-        updateLineNumberCount();
-    }
 
     @FXML
     private void onKeyPress(KeyEvent e)

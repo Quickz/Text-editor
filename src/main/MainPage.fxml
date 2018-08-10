@@ -50,8 +50,7 @@
                 <VBox fx:id="lineNumberContainer" minWidth="40" maxWidth="40"/>
             </ScrollPane>
 
-            <TextArea fx:id="content"
-                      onKeyPressed="#onContentKeyPress"/>
+            <TextArea fx:id="content"/>
         </HBox>
     </center>
 
