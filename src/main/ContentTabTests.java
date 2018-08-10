@@ -78,4 +78,45 @@ public class ContentTabTests
 
         Assertions.assertEquals(expected, contentTab.getText());
     }
+
+    @Test
+    public void getColumnInEmptyContent()
+    {
+        ContentTab contentTab = new ContentTab();
+        int column = contentTab.getColumn(0);
+        Assertions.assertEquals(1, column);
+    }
+
+    @Test
+    public void getColumnInContent()
+    {
+        ContentTab contentTab = new ContentTab();
+        contentTab.setText(
+            "Some juicy\n" +
+            "text\n" +
+            "for testing\n" +
+            "the get clumn\n" +
+            "method");
+        int column = contentTab.getColumn(12);
+        Assertions.assertEquals(2, column);
+    }
+
+    @Test
+    public void getLineInEmptyContent()
+    {
+        ContentTab contentTab = new ContentTab();
+        int line = contentTab.getLine(0);
+        Assertions.assertEquals(1, line);
+    }
+
+    @Test
+    public void getLineInContent()
+    {
+        ContentTab contentTab = new ContentTab();
+        contentTab.setText(
+            "Bunch of words\n" +
+            "For testing get line method");
+        int line = contentTab.getLine(15);
+        Assertions.assertEquals(2, line);
+    }
 }
