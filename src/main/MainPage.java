@@ -333,7 +333,8 @@ public class MainPage
         content.selectPositionCaret(endPosition + 1);
     }
 
-    public void newFile()
+    @FXML
+    private void newFile()
     {
         try
         {
@@ -370,7 +371,8 @@ public class MainPage
         }
     }
 
-    public void open()
+    @FXML
+    private void open()
     {
         Stage fileDialog = new Stage();
         FileChooser fileChooser = new FileChooser();
@@ -438,7 +440,8 @@ public class MainPage
      * saves current text content
      * returns true if it was successfully saved
      **/
-    public boolean save()
+    @FXML
+    private boolean save()
     {
         if (currentSaveDirectory == null)
         {
@@ -456,7 +459,8 @@ public class MainPage
      * saves current text content
      * returns true if it was successfully saved
      **/
-    public boolean saveAs()
+    @FXML
+    private boolean saveAs()
     {
         Stage fileDialog = new Stage();
         FileChooser fileChooser = new FileChooser();

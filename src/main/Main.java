@@ -22,12 +22,12 @@ public class Main extends Application
     private void initializeApp(Stage primaryStage) throws Exception
     {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainPage.fxml"));
-        Parent root = (Parent)loader.load();
+        Parent root = loader.load();
 
         primaryStage.setTitle("Text Editor");
         primaryStage.setScene(new Scene(root, 300, 275));
 
-        MainPage controller = (MainPage)loader.getController();
+        MainPage controller = loader.getController();
         controller.onStageLoad(primaryStage);
 
         primaryStage.show();
