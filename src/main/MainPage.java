@@ -127,8 +127,6 @@ public class MainPage
         updateBottomColumnNumber();
         updateBottomLengthNumber();
 
-        updateLineNumberCount();
-
         // updating scroll position since there may be
         // new line entry from udating line number count
         setLineNumberScrollValueToContentValue();
@@ -633,6 +631,12 @@ public class MainPage
     private void onContentTextChange()
     {
         contentWasModified = true;
+    }
+
+    @FXML
+    private void onContentKeyTyped()
+    {
+        updateLineNumberCount();
     }
 
     @FXML
