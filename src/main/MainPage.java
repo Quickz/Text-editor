@@ -268,7 +268,7 @@ public class MainPage
     {
         int number = lineNumberContainer.getChildren().size() + 1;
         Label label = new Label(Integer.toString(number));
-        label.setMinWidth(40);
+        label.setMinWidth(45);
         label.setMinHeight(16);
 
         label.setOnMouseClicked(e -> lineNumberLabelOnClick(number));
