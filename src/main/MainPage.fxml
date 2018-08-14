@@ -48,7 +48,7 @@
                 minWidth="45"
                 maxWidth="45">
 
-                <VBox fx:id="lineNumberContainer" alignment="CENTER_RIGHT"/>
+                <VBox fx:id="lineNumberContainer" alignment="TOP_RIGHT"/>
             </ScrollPane>
 
             <TextArea fx:id="content" onKeyTyped="#onContentKeyTyped"/>
