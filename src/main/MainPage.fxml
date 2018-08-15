@@ -43,10 +43,8 @@
 
             <top>
                 <HBox>
-                    <TabPane HBox.hgrow="ALWAYS">
-                        <tabs>
-                            <Tab text="main tab" closable="false"/>
-                        </tabs>
+                    <TabPane fx:id="contentTabPane" HBox.hgrow="ALWAYS">
+                        <tabs></tabs>
                     </TabPane>
 
                 </HBox>

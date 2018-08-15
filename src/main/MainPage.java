@@ -5,9 +5,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -42,6 +40,9 @@ public class MainPage
     @FXML
     private Label bottomLineLengthNumber;
 
+    @FXML
+    private TabPane contentTabPane;
+
     private Stage stage;
 
     private ContentTab contentTab;
@@ -75,7 +76,7 @@ public class MainPage
             .textProperty()
             .addListener(e -> onContentTextChange());
 
-        contentTab = new ContentTab(content);
+        contentTab = new ContentTab(contentTabPane, content);
 
         lineNumberScrollPane
             .focusedProperty()

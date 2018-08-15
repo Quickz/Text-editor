@@ -2,6 +2,8 @@ package main;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -9,6 +11,16 @@ import javafx.scene.input.ClipboardContent;
 public class ContentTab
 {
     public StringProperty textProperty;
+    public Tab entry;
+
+    public ContentTab(TabPane tabPane, TextArea textArea)
+    {
+        this(textArea);
+        entry = new Tab("untitled");
+        entry.setClosable(false);
+        tabPane.getTabs().add(entry);
+
+    }
 
     public ContentTab(TextArea textArea)
     {
