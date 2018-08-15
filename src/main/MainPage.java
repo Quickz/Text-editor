@@ -47,11 +47,11 @@ public class MainPage
 
     private ContentTab contentTab;
 
+    private File currentFile;
+
     // true if content was modified
     // since the last time it was modified
     // or set to a new one
-    private String currentSaveDirectory;
-
     private boolean contentWasModified = false;
 
     // number of the line that is currently selected
@@ -339,9 +339,7 @@ public class MainPage
         {
             if (!contentWasModified)
             {
-                currentSaveDirectory = null;
-                content.clear();
-                contentWasModified = false;
+                generateNewFile();
                 return;
             }
 
@@ -352,22 +350,26 @@ public class MainPage
                 boolean savedSuccessfully = save();
                 if (savedSuccessfully)
                 {
-                    currentSaveDirectory = null;
-                    content.clear();
-                    contentWasModified = false;
+                    generateNewFile();
                 }
             }
             else if (response.equals("dontSave"))
             {
-                currentSaveDirectory = null;
-                content.clear();
-                contentWasModified = false;
+                generateNewFile();
             }
         }
         catch (Exception e)
         {
             System.out.println(e.getMessage());
         }
+    }
+
+    private void generateNewFile()
+    {
+        currentFile = null;
+        content.clear();
+        contentWasModified = false;
+        contentTab.entry.setText("untitled");
     }
 
     @FXML
@@ -381,9 +383,10 @@ public class MainPage
 
         if (file != null)
         {
-            currentSaveDirectory = file.getPath();
+            currentFile = file;
             loadContent(file.getPath());
             contentWasModified = false;
+            contentTab.entry.setText(file.getName());
         }
     }
 
@@ -442,14 +445,15 @@ public class MainPage
     @FXML
     private boolean save()
     {
-        if (currentSaveDirectory == null)
+        if (currentFile == null)
         {
             return saveAs();
         }
         else
         {
-            saveContent(currentSaveDirectory);
+            saveContent(currentFile.getPath());
             contentWasModified = false;
+            contentTab.entry.setText(currentFile.getName());
             return true;
         }
     }
@@ -472,9 +476,10 @@ public class MainPage
 
         if (file != null)
         {
-            currentSaveDirectory = file.getPath();
+            currentFile = file;
             contentWasModified = false;
             saveContent(file.getPath());
+            contentTab.entry.setText(file.getName());
             return true;
         }
         return false;
