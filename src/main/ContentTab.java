@@ -17,9 +17,7 @@ public class ContentTab
     {
         this(textArea);
         entry = new Tab("untitled");
-        entry.setClosable(false);
         tabPane.getTabs().add(entry);
-
     }
 
     public ContentTab(TextArea textArea)

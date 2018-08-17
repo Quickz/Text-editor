@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class MainPage
 {
@@ -45,7 +46,8 @@ public class MainPage
 
     private Stage stage;
 
-    private ContentTab contentTab;
+    private ArrayList<ContentTab> contentTabs = new ArrayList<>();
+    private int selectedTab = 0;
 
     private File currentFile;
 
@@ -76,7 +78,7 @@ public class MainPage
             .textProperty()
             .addListener(e -> onContentTextChange());
 
-        contentTab = new ContentTab(contentTabPane, content);
+        addNewContentTab();
 
         lineNumberScrollPane
             .focusedProperty()
@@ -108,6 +110,77 @@ public class MainPage
         updateBottomLengthNumber();
     }
 
+    private void addNewContentTab()
+    {
+        contentTabs.add(new ContentTab(contentTabPane, content));
+        contentTabs
+            .get(selectedTab)
+            .entry
+            .setOnCloseRequest(e ->
+                onTabClose(e, contentTabs.get(selectedTab)));
+    }
+
+    /**
+     * runs when a tab is closed
+     * TODO: refactor this code
+     **/
+    private void onTabClose(Event x, ContentTab tab)
+    {
+        try
+        {
+            if (!contentWasModified)
+            {
+                contentTabs.remove(tab);
+                if (contentTabs.size() == 0)
+                {
+                    addNewContentTab();
+                }
+
+                generateNewFile();
+                return;
+            }
+
+            String response = SaveFileWarning.generate();
+
+            if (response.equals("save"))
+            {
+                boolean savedSuccessfully = save();
+                if (savedSuccessfully)
+                {
+                    contentTabs.remove(tab);
+                    if (contentTabs.size() == 0)
+                    {
+                        addNewContentTab();
+                    }
+
+                    generateNewFile();
+                }
+                else
+                {
+                    x.consume();
+                }
+            }
+            else if (response.equals("dontSave"))
+            {
+                contentTabs.remove(tab);
+                if (contentTabs.size() == 0)
+                {
+                    addNewContentTab();
+                }
+
+                generateNewFile();
+            }
+            else
+            {
+                x.consume();
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
     /**
      * changes focus to content
      *
@@ -123,7 +196,7 @@ public class MainPage
      **/
     private void onContentCaretPositionChange(Number position)
     {
-        int lineNumber = contentTab.getLine((int)position);
+        int lineNumber = contentTabs.get(selectedTab).getLine((int)position);
 
         updateBottomColumnNumber();
         updateBottomLengthNumber();
@@ -185,7 +258,7 @@ public class MainPage
     {
         int position = content.getCaretPosition();
         bottomColumnNumber.setText(
-            ", Column: " + contentTab.getColumn(position));
+            ", Column: " + contentTabs.get(selectedTab).getColumn(position));
     }
 
     /**
@@ -194,10 +267,10 @@ public class MainPage
      **/
     private void updateBottomLengthNumber()
     {
-        int line = contentTab.getLine(content.getCaretPosition());
+        int line = contentTabs.get(selectedTab).getLine(content.getCaretPosition());
         bottomLineLengthNumber.setText(
             ", Length: " +
-            contentTab.getLineLength(line));
+            contentTabs.get(selectedTab).getLineLength(line));
     }
 
     /**
@@ -238,7 +311,7 @@ public class MainPage
      **/
     private void updateLineNumberCount()
     {
-        int lineCount = contentTab.getLineCount();
+        int lineCount = contentTabs.get(selectedTab).getLineCount();
         int numberCount = lineNumberContainer.getChildren().size();
 
         // removing if too many
@@ -256,7 +329,7 @@ public class MainPage
             addLineNumberEntry();
         }
 
-        int lineNumber = contentTab.getLine(content.getCaretPosition());
+        int lineNumber = contentTabs.get(selectedTab).getLine(content.getCaretPosition());
         setLineNumberLabelActive(lineNumber);
     }
 
@@ -369,7 +442,7 @@ public class MainPage
         currentFile = null;
         content.clear();
         contentWasModified = false;
-        contentTab.entry.setText("untitled");
+        contentTabs.get(selectedTab).entry.setText("untitled");
     }
 
     @FXML
@@ -386,7 +459,7 @@ public class MainPage
             currentFile = file;
             loadContent(file.getPath());
             contentWasModified = false;
-            contentTab.entry.setText(file.getName());
+            contentTabs.get(selectedTab).entry.setText(file.getName());
         }
     }
 
@@ -453,7 +526,7 @@ public class MainPage
         {
             saveContent(currentFile.getPath());
             contentWasModified = false;
-            contentTab.entry.setText(currentFile.getName());
+            contentTabs.get(selectedTab).entry.setText(currentFile.getName());
             return true;
         }
     }
@@ -479,7 +552,7 @@ public class MainPage
             currentFile = file;
             contentWasModified = false;
             saveContent(file.getPath());
-            contentTab.entry.setText(file.getName());
+            contentTabs.get(selectedTab).entry.setText(file.getName());
             return true;
         }
         return false;
@@ -618,7 +691,7 @@ public class MainPage
             e.getCode() == KeyCode.X &&
             content.getSelectedText().isEmpty())
         {
-            int newCaretPosition = contentTab
+            int newCaretPosition = contentTabs.get(selectedTab)
                 .cutLine(content.getCaretPosition());
 
             // moving the | thingy position
