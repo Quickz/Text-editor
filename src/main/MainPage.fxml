@@ -11,6 +11,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tab?>
 <BorderPane fx:id="mainContainer"
             fx:controller="main.MainPage"
             xmlns:fx="http://javafx.com/fxml"

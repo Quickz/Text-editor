@@ -1,6 +1,7 @@
 package main;
 
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -80,6 +81,15 @@ public class MainPage
 
         addNewContentTab();
 
+        // remove this portion later
+        contentTabs.get(0).entry.setClosable(false);
+
+        contentTabPane
+            .getSelectionModel()
+            .selectedIndexProperty()
+            .addListener((obs, oldVal, newVal) ->
+                onTabChange((int)newVal));
+
         lineNumberScrollPane
             .focusedProperty()
             .addListener(e -> onLineNumberContainerFocus());
@@ -110,14 +120,24 @@ public class MainPage
         updateBottomLengthNumber();
     }
 
+    private void onTabChange(int newIndex)
+    {
+        //selectedTab = newIndex;
+        System.out.println("selected tab: " + newIndex);
+    }
+
     private void addNewContentTab()
     {
         contentTabs.add(new ContentTab(contentTabPane, content));
+
+        int index = contentTabs.size() - 1;
+        ContentTab tab = contentTabs.get(index);
+
         contentTabs
-            .get(selectedTab)
+            .get(index)
             .entry
             .setOnCloseRequest(e ->
-                onTabClose(e, contentTabs.get(selectedTab)));
+                onTabClose(e, tab));
     }
 
     /**
@@ -126,6 +146,7 @@ public class MainPage
      **/
     private void onTabClose(Event x, ContentTab tab)
     {
+        System.out.println("closing");
         try
         {
             if (!contentWasModified)
@@ -408,33 +429,7 @@ public class MainPage
     @FXML
     private void newFile()
     {
-        try
-        {
-            if (!contentWasModified)
-            {
-                generateNewFile();
-                return;
-            }
-
-            String response = SaveFileWarning.generate();
-
-            if (response.equals("save"))
-            {
-                boolean savedSuccessfully = save();
-                if (savedSuccessfully)
-                {
-                    generateNewFile();
-                }
-            }
-            else if (response.equals("dontSave"))
-            {
-                generateNewFile();
-            }
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
+        addNewContentTab();
     }
 
     private void generateNewFile()
