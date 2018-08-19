@@ -13,6 +13,13 @@ public class ContentTab
     public StringProperty textProperty;
     public Tab entry;
 
+    public ContentTab(TabPane tabPane)
+    {
+        textProperty = new SimpleStringProperty("");
+        entry = new Tab("untitled");
+        tabPane.getTabs().add(entry);
+    }
+
     public ContentTab(TabPane tabPane, TextArea textArea)
     {
         this(textArea);
@@ -23,7 +30,7 @@ public class ContentTab
     public ContentTab(TextArea textArea)
     {
         textProperty = new SimpleStringProperty("");
-        textProperty.bindBidirectional(textArea.textProperty());
+        textArea.textProperty().bindBidirectional(textProperty);
     }
 
     public ContentTab()

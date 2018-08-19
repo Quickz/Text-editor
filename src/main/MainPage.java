@@ -80,6 +80,9 @@ public class MainPage
             .addListener(e -> onContentTextChange());
 
         addNewContentTab();
+        content
+            .textProperty()
+            .bindBidirectional(contentTabs.get(selectedTab).textProperty);
 
         // remove this portion later
         contentTabs.get(0).entry.setClosable(false);
@@ -122,13 +125,31 @@ public class MainPage
 
     private void onTabChange(int newIndex)
     {
-        //selectedTab = newIndex;
+        content
+            .textProperty()
+            .unbindBidirectional(contentTabs.get(selectedTab).textProperty);
+
+        content.clear();
+
+        selectedTab = newIndex;
+
+        System.out.println("new tab content: " + contentTabs.get(selectedTab).getText());
+
+        content
+            .textProperty()
+            .bindBidirectional(contentTabs.get(selectedTab).textProperty);
+
+        updateLineNumberCount();
+        updateBottomColumnNumber();
+        updateBottomLengthNumber();
+        updateBottomLineNumber();
+
         System.out.println("selected tab: " + newIndex);
     }
 
     private void addNewContentTab()
     {
-        contentTabs.add(new ContentTab(contentTabPane, content));
+        contentTabs.add(new ContentTab(contentTabPane));
 
         int index = contentTabs.size() - 1;
         ContentTab tab = contentTabs.get(index);
