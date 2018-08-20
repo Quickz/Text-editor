@@ -48,7 +48,8 @@ public class MainPage
     private Stage stage;
 
     private ArrayList<ContentTab> contentTabs = new ArrayList<>();
-    private int selectedTab = 0;
+    private int selectedTabIndex = 0;
+    private ContentTab selectedTab;
 
     private File currentFile;
 
@@ -79,10 +80,12 @@ public class MainPage
             .textProperty()
             .addListener(e -> onContentTextChange());
 
+
         addNewContentTab();
         content
             .textProperty()
-            .bindBidirectional(contentTabs.get(selectedTab).textProperty);
+            .bindBidirectional(contentTabs.get(selectedTabIndex).textProperty);
+        selectedTab = contentTabs.get(0);
 
         // remove this portion later
         contentTabs.get(0).entry.setClosable(false);
@@ -127,17 +130,16 @@ public class MainPage
     {
         content
             .textProperty()
-            .unbindBidirectional(contentTabs.get(selectedTab).textProperty);
+            .unbindBidirectional(selectedTab.textProperty);
 
         content.clear();
 
-        selectedTab = newIndex;
-
-        System.out.println("new tab content: " + contentTabs.get(selectedTab).getText());
+        selectedTabIndex = newIndex;
+        selectedTab = contentTabs.get(newIndex);
 
         content
             .textProperty()
-            .bindBidirectional(contentTabs.get(selectedTab).textProperty);
+            .bindBidirectional(contentTabs.get(selectedTabIndex).textProperty);
 
         updateLineNumberCount();
         updateBottomColumnNumber();
@@ -208,9 +210,8 @@ public class MainPage
                 if (contentTabs.size() == 0)
                 {
                     addNewContentTab();
+                    generateNewFile();
                 }
-
-                generateNewFile();
             }
             else
             {
@@ -219,7 +220,7 @@ public class MainPage
         }
         catch (Exception e)
         {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -238,7 +239,7 @@ public class MainPage
      **/
     private void onContentCaretPositionChange(Number position)
     {
-        int lineNumber = contentTabs.get(selectedTab).getLine((int)position);
+        int lineNumber = contentTabs.get(selectedTabIndex).getLine((int)position);
 
         updateBottomColumnNumber();
         updateBottomLengthNumber();
@@ -300,7 +301,7 @@ public class MainPage
     {
         int position = content.getCaretPosition();
         bottomColumnNumber.setText(
-            ", Column: " + contentTabs.get(selectedTab).getColumn(position));
+            ", Column: " + contentTabs.get(selectedTabIndex).getColumn(position));
     }
 
     /**
@@ -309,10 +310,10 @@ public class MainPage
      **/
     private void updateBottomLengthNumber()
     {
-        int line = contentTabs.get(selectedTab).getLine(content.getCaretPosition());
+        int line = contentTabs.get(selectedTabIndex).getLine(content.getCaretPosition());
         bottomLineLengthNumber.setText(
             ", Length: " +
-            contentTabs.get(selectedTab).getLineLength(line));
+            contentTabs.get(selectedTabIndex).getLineLength(line));
     }
 
     /**
@@ -353,7 +354,7 @@ public class MainPage
      **/
     private void updateLineNumberCount()
     {
-        int lineCount = contentTabs.get(selectedTab).getLineCount();
+        int lineCount = contentTabs.get(selectedTabIndex).getLineCount();
         int numberCount = lineNumberContainer.getChildren().size();
 
         // removing if too many
@@ -371,7 +372,7 @@ public class MainPage
             addLineNumberEntry();
         }
 
-        int lineNumber = contentTabs.get(selectedTab).getLine(content.getCaretPosition());
+        int lineNumber = contentTabs.get(selectedTabIndex).getLine(content.getCaretPosition());
         setLineNumberLabelActive(lineNumber);
     }
 
@@ -458,7 +459,7 @@ public class MainPage
         currentFile = null;
         content.clear();
         contentWasModified = false;
-        contentTabs.get(selectedTab).entry.setText("untitled");
+        contentTabs.get(selectedTabIndex).entry.setText("bacon");
     }
 
     @FXML
@@ -475,7 +476,7 @@ public class MainPage
             currentFile = file;
             loadContent(file.getPath());
             contentWasModified = false;
-            contentTabs.get(selectedTab).entry.setText(file.getName());
+            contentTabs.get(selectedTabIndex).entry.setText(file.getName());
         }
     }
 
@@ -542,7 +543,7 @@ public class MainPage
         {
             saveContent(currentFile.getPath());
             contentWasModified = false;
-            contentTabs.get(selectedTab).entry.setText(currentFile.getName());
+            contentTabs.get(selectedTabIndex).entry.setText(currentFile.getName());
             return true;
         }
     }
@@ -568,7 +569,7 @@ public class MainPage
             currentFile = file;
             contentWasModified = false;
             saveContent(file.getPath());
-            contentTabs.get(selectedTab).entry.setText(file.getName());
+            contentTabs.get(selectedTabIndex).entry.setText(file.getName());
             return true;
         }
         return false;
@@ -707,7 +708,7 @@ public class MainPage
             e.getCode() == KeyCode.X &&
             content.getSelectedText().isEmpty())
         {
-            int newCaretPosition = contentTabs.get(selectedTab)
+            int newCaretPosition = contentTabs.get(selectedTabIndex)
                 .cutLine(content.getCaretPosition());
 
             // moving the | thingy position
