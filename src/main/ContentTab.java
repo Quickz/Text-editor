@@ -8,10 +8,16 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
+import java.io.File;
+
 public class ContentTab
 {
     public StringProperty textProperty;
     public Tab entry;
+
+    // file from which the content
+    // was loaded or saved to
+    public File file;
 
     public ContentTab(TabPane tabPane)
     {

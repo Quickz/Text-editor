@@ -51,8 +51,6 @@ public class MainPage
     private int selectedTabIndex = 0;
     private ContentTab selectedTab;
 
-    private File currentFile;
-
     // true if content was modified
     // since the last time it was modified
     // or set to a new one
@@ -456,7 +454,6 @@ public class MainPage
 
     private void generateNewFile()
     {
-        currentFile = null;
         content.clear();
         contentWasModified = false;
         contentTabs.get(selectedTabIndex).entry.setText("bacon");
@@ -473,7 +470,7 @@ public class MainPage
 
         if (file != null)
         {
-            currentFile = file;
+            selectedTab.file = file;
             loadContent(file.getPath());
             contentWasModified = false;
             contentTabs.get(selectedTabIndex).entry.setText(file.getName());
@@ -535,15 +532,17 @@ public class MainPage
     @FXML
     private boolean save()
     {
-        if (currentFile == null)
+        if (selectedTab.file == null)
         {
             return saveAs();
         }
         else
         {
-            saveContent(currentFile.getPath());
+            saveContent(selectedTab.file.getPath());
             contentWasModified = false;
-            contentTabs.get(selectedTabIndex).entry.setText(currentFile.getName());
+            contentTabs
+                .get(selectedTabIndex)
+                .entry.setText(selectedTab.file.getName());
             return true;
         }
     }
@@ -566,7 +565,7 @@ public class MainPage
 
         if (file != null)
         {
-            currentFile = file;
+            selectedTab.file = file;
             contentWasModified = false;
             saveContent(file.getPath());
             contentTabs.get(selectedTabIndex).entry.setText(file.getName());
