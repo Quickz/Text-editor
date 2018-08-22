@@ -19,9 +19,15 @@ public class ContentTab
     // was loaded or saved to
     public File file;
 
+    // true if content was modified
+    // since the last time it was modified
+    // or set to a new one
+    public boolean contentWasModified = false;
+
     public ContentTab(TabPane tabPane)
     {
         textProperty = new SimpleStringProperty("");
+        textProperty.addListener(e -> onContentTextChange());
         entry = new Tab("untitled");
         tabPane.getTabs().add(entry);
     }
@@ -42,6 +48,15 @@ public class ContentTab
     public ContentTab()
     {
         textProperty = new SimpleStringProperty("");
+    }
+
+    /**
+     * called when the text inside
+     * the content changes
+     **/
+    private void onContentTextChange()
+    {
+        contentWasModified = true;
     }
 
     /**

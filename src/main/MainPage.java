@@ -51,11 +51,6 @@ public class MainPage
     private int selectedTabIndex = 0;
     private ContentTab selectedTab;
 
-    // true if content was modified
-    // since the last time it was modified
-    // or set to a new one
-    private boolean contentWasModified = false;
-
     // number of the line that is currently selected
     private int selectedLine = 1;
 
@@ -73,11 +68,6 @@ public class MainPage
             .caretPositionProperty()
             .addListener((obs, oldVal, newVal) ->
                 onContentCaretPositionChange(newVal));
-
-        content
-            .textProperty()
-            .addListener(e -> onContentTextChange());
-
 
         addNewContentTab();
         content
@@ -170,7 +160,7 @@ public class MainPage
         System.out.println("closing");
         try
         {
-            if (!contentWasModified)
+            if (!selectedTab.contentWasModified)
             {
                 contentTabs.remove(tab);
                 if (contentTabs.size() == 0)
@@ -455,8 +445,7 @@ public class MainPage
     private void generateNewFile()
     {
         content.clear();
-        contentWasModified = false;
-        contentTabs.get(selectedTabIndex).entry.setText("bacon");
+        selectedTab.contentWasModified = false;
     }
 
     @FXML
@@ -472,7 +461,7 @@ public class MainPage
         {
             selectedTab.file = file;
             loadContent(file.getPath());
-            contentWasModified = false;
+            selectedTab.contentWasModified = false;
             contentTabs.get(selectedTabIndex).entry.setText(file.getName());
         }
     }
@@ -539,7 +528,7 @@ public class MainPage
         else
         {
             saveContent(selectedTab.file.getPath());
-            contentWasModified = false;
+            selectedTab.contentWasModified = false;
             contentTabs
                 .get(selectedTabIndex)
                 .entry.setText(selectedTab.file.getName());
@@ -566,7 +555,7 @@ public class MainPage
         if (file != null)
         {
             selectedTab.file = file;
-            contentWasModified = false;
+            selectedTab.contentWasModified = false;
             saveContent(file.getPath());
             contentTabs.get(selectedTabIndex).entry.setText(file.getName());
             return true;
@@ -641,7 +630,7 @@ public class MainPage
     {
         try
         {
-            if (!contentWasModified)
+            if (!selectedTab.contentWasModified)
             {
                 Platform.exit();
                 return;
@@ -717,15 +706,6 @@ public class MainPage
         {
             controlKeyDown = true;
         }
-    }
-
-    /**
-     * called when the text inside
-     * the content changes
-     **/
-    private void onContentTextChange()
-    {
-        contentWasModified = true;
     }
 
     @FXML
