@@ -163,6 +163,9 @@ public class MainPage
             if (!selectedTab.contentWasModified)
             {
                 contentTabs.remove(tab);
+                selectedTabIndex--;
+                selectedTab = contentTabs.get(selectedTabIndex);
+
                 if (contentTabs.size() == 0)
                 {
                     addNewContentTab();
@@ -180,6 +183,9 @@ public class MainPage
                 if (savedSuccessfully)
                 {
                     contentTabs.remove(tab);
+                    selectedTabIndex--;
+                    selectedTab = contentTabs.get(selectedTabIndex);
+
                     if (contentTabs.size() == 0)
                     {
                         addNewContentTab();
@@ -195,6 +201,9 @@ public class MainPage
             else if (response.equals("dontSave"))
             {
                 contentTabs.remove(tab);
+                selectedTabIndex--;
+                selectedTab = contentTabs.get(selectedTabIndex);
+
                 if (contentTabs.size() == 0)
                 {
                     addNewContentTab();
