@@ -149,6 +149,11 @@ public class MainPage
             .entry
             .setOnCloseRequest(e ->
                 onTabClose(e, tab));
+
+        if (index > 0)
+        {
+            onTabChange(index);
+        }
     }
 
     /**
@@ -468,9 +473,15 @@ public class MainPage
 
         if (file != null)
         {
+            addNewContentTab();
+
+            // selecting the newly created tab
+            selectedTabIndex = contentTabs.size() - 1;
+            selectedTab = contentTabs.get(selectedTabIndex);
+            contentTabPane.getSelectionModel().select(selectedTabIndex);
+
             selectedTab.file = file;
             loadContent(file.getPath());
-            selectedTab.contentWasModified = false;
             contentTabs.get(selectedTabIndex).entry.setText(file.getName());
         }
     }
