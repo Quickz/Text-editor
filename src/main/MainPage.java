@@ -473,7 +473,14 @@ public class MainPage
 
         if (file != null)
         {
-            addNewContentTab();
+            // adding new tab only if the first one
+            // is not the only tab or it was modified
+            if (contentTabs.size() != 1 ||
+                selectedTab.file != null ||
+                selectedTab.contentWasModified)
+            {
+                addNewContentTab();
+            }
 
             // selecting the newly created tab
             selectedTabIndex = contentTabs.size() - 1;
