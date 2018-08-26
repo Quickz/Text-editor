@@ -75,8 +75,10 @@ public class MainPage
             .bindBidirectional(contentTabs.get(selectedTabIndex).textProperty);
         selectedTab = contentTabs.get(0);
 
-        // remove this portion later
-        contentTabs.get(0).entry.setClosable(false);
+        contentTabPane
+            .getTabs()
+            .get(selectedTabIndex)
+            .setOnCloseRequest(e -> onFirstTabClose(e));
 
         contentTabPane
             .getSelectionModel()
@@ -112,6 +114,17 @@ public class MainPage
         updateLineNumberCount();
         updateBottomColumnNumber();
         updateBottomLengthNumber();
+    }
+
+    private void onFirstTabClose(Event e)
+    {
+        e.consume();
+
+        ContentTab firstTab = contentTabs.get(0);
+        firstTab.contentWasModified = false;
+        firstTab.file = null;
+        firstTab.setText("");
+        contentTabPane.getTabs().get(0).setText("untitled");
     }
 
     private void onTabChange(int newIndex)
