@@ -150,6 +150,10 @@ public class MainPage
         System.out.println("selected tab: " + newIndex);
     }
 
+    /**
+     * adds new tab entry to the
+     * tab list at the top
+     **/
     private void addNewContentTab()
     {
         contentTabs.add(new ContentTab(contentTabPane));
@@ -163,10 +167,8 @@ public class MainPage
             .setOnCloseRequest(e ->
                 onTabClose(e, tab));
 
-        if (index > 0)
-        {
-            onTabChange(index);
-        }
+        // selecting the newly created tab
+        contentTabPane.getSelectionModel().select(index);
     }
 
     /**
