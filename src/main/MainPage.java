@@ -168,7 +168,7 @@ public class MainPage
                 onTabClose(e, tab));
 
         // selecting the newly created tab
-        contentTabPane.getSelectionModel().select(index);
+        selectContentTab(index);
     }
 
     /**
@@ -497,15 +497,15 @@ public class MainPage
                 addNewContentTab();
             }
 
-            // selecting the newly created tab
-            selectedTabIndex = contentTabs.size() - 1;
-            selectedTab = contentTabs.get(selectedTabIndex);
-            contentTabPane.getSelectionModel().select(selectedTabIndex);
-
             selectedTab.file = file;
             loadContent(file.getPath());
             contentTabs.get(selectedTabIndex).entry.setText(file.getName());
         }
+    }
+
+    private void selectContentTab(int index)
+    {
+        contentTabPane.getSelectionModel().select(index);
     }
 
     /**
