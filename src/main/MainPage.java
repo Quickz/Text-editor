@@ -88,7 +88,11 @@ public class MainPage
 
         lineNumberScrollPane
             .focusedProperty()
-            .addListener(e -> onLineNumberContainerFocus());
+            .addListener(e -> focusContent());
+
+        contentTabPane
+            .focusedProperty()
+            .addListener(e -> focusContent());
 
         // made the hbox element stretch based
         // on the content text field
@@ -245,10 +249,12 @@ public class MainPage
      * changes focus to content
      *
      **/
-    private void onLineNumberContainerFocus()
+    private void focusContent()
     {
         content.requestFocus();
     }
+
+
 
     /**
      * called when the caret (| thingy)
