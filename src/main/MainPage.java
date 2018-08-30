@@ -120,9 +120,16 @@ public class MainPage
         updateBottomLengthNumber();
     }
 
-    private void onFirstTabClose(Event e)
+    /**
+     * a separate method for the first
+     * tab which resets it instead of closing
+     **/
+    private void onFirstTabClose(Event event)
     {
-        e.consume();
+        if (event != null)
+        {
+            event.consume();
+        }
 
         ContentTab firstTab = contentTabs.get(0);
         firstTab.contentWasModified = false;
@@ -179,16 +186,21 @@ public class MainPage
      * runs when a tab is closed
      * TODO: refactor this code
      **/
-    private void onTabClose(Event x, ContentTab tab)
+    private void onTabClose(Event event, ContentTab tab)
     {
         System.out.println("closing");
+
+        if (event != null)
+        {
+            event.consume();
+        }
+
         try
         {
             if (!selectedTab.contentWasModified)
             {
+                removeSelectedTab();
                 contentTabs.remove(tab);
-                selectedTabIndex--;
-                selectedTab = contentTabs.get(selectedTabIndex);
 
                 if (contentTabs.size() == 0)
                 {
@@ -206,9 +218,8 @@ public class MainPage
                 boolean savedSuccessfully = save();
                 if (savedSuccessfully)
                 {
+                    removeSelectedTab();
                     contentTabs.remove(tab);
-                    selectedTabIndex--;
-                    selectedTab = contentTabs.get(selectedTabIndex);
 
                     if (contentTabs.size() == 0)
                     {
@@ -217,16 +228,11 @@ public class MainPage
 
                     generateNewFile();
                 }
-                else
-                {
-                    x.consume();
-                }
             }
             else if (response.equals("dontSave"))
             {
+                removeSelectedTab();
                 contentTabs.remove(tab);
-                selectedTabIndex--;
-                selectedTab = contentTabs.get(selectedTabIndex);
 
                 if (contentTabs.size() == 0)
                 {
@@ -234,15 +240,28 @@ public class MainPage
                     generateNewFile();
                 }
             }
-            else
-            {
-                x.consume();
-            }
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * removes the currently selected tab
+     * entry on the top
+     * ----------------------------------
+     * Note: after removal of this tab
+     * the event responsible for tab change
+     * may get called and change the selected
+     * tab by itself
+     **/
+    private void removeSelectedTab()
+    {
+        Tab tabInTheTop = contentTabPane
+            .getSelectionModel()
+            .getSelectedItem();
+        contentTabPane.getTabs().remove(tabInTheTop);
     }
 
     /**
@@ -253,8 +272,6 @@ public class MainPage
     {
         content.requestFocus();
     }
-
-
 
     /**
      * called when the caret (| thingy)
@@ -738,17 +755,25 @@ public class MainPage
     private Boolean controlKeyDown = false;
 
     @FXML
+    private void onContentKeyTyped()
+    {
+        updateLineNumberCount();
+    }
+
+    @FXML
     private void onKeyPress(KeyEvent e)
     {
-        if (controlKeyDown &&
-            e.getCode() == KeyCode.X &&
-            content.getSelectedText().isEmpty())
+        if (controlKeyDown)
         {
-            int newCaretPosition = contentTabs.get(selectedTabIndex)
-                .cutLine(content.getCaretPosition());
-
-            // moving the | thingy position
-            content.positionCaret(newCaretPosition);
+            if (e.getCode() == KeyCode.X &&
+                content.getSelectedText().isEmpty())
+            {
+                cutSelectedContentLine();
+            }
+            if (e.getCode() == KeyCode.W)
+            {
+                closeSelectedContentTab();
+            }
         }
         else if (e.getCode() == KeyCode.CONTROL)
         {
@@ -756,10 +781,31 @@ public class MainPage
         }
     }
 
-    @FXML
-    private void onContentKeyTyped()
+    /**
+     * copies the text in the selected
+     * content line and removes it
+     **/
+    private void cutSelectedContentLine()
     {
-        updateLineNumberCount();
+        int newCaretPosition = contentTabs
+            .get(selectedTabIndex)
+            .cutLine(content.getCaretPosition());
+
+        // moving the | thingy position
+        content.positionCaret(newCaretPosition);
+    }
+
+    /**
+     * closes the currently
+     * selected tab
+     **/
+    private void closeSelectedContentTab()
+    {
+        Tab tab = contentTabPane
+            .getSelectionModel()
+            .getSelectedItem();
+
+        tab.getOnCloseRequest().handle(null);
     }
 
     @FXML
