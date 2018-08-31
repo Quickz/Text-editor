@@ -54,6 +54,9 @@ public class MainPage
     // number of the line that is currently selected
     private int selectedLine = 1;
 
+    private Boolean controlKeyDown = false;
+    private Boolean shiftKeyDown = false;
+
     @FXML
     private void initialize()
     {
@@ -752,8 +755,6 @@ public class MainPage
         }
     }
 
-    private Boolean controlKeyDown = false;
-
     @FXML
     private void onContentKeyTyped()
     {
@@ -770,14 +771,73 @@ public class MainPage
             {
                 cutSelectedContentLine();
             }
+
             if (e.getCode() == KeyCode.W)
             {
                 closeSelectedContentTab();
             }
+
+            if (e.getCode() == KeyCode.TAB)
+            {
+                if (!shiftKeyDown)
+                {
+                    switchToNextTab();
+                }
+                else
+                {
+                    switchToPreviousTab();
+                }
+            }
         }
-        else if (e.getCode() == KeyCode.CONTROL)
+
+        if (e.getCode() == KeyCode.CONTROL)
         {
             controlKeyDown = true;
+        }
+
+        if (e.getCode() == KeyCode.SHIFT)
+        {
+            shiftKeyDown = true;
+        }
+    }
+
+    /**
+     * switches the selected tab in the top
+     * to the next one
+     **/
+    private void switchToNextTab()
+    {
+        SingleSelectionModel selectionModel =
+            contentTabPane.getSelectionModel();
+        int lastTabIndex = contentTabPane.getTabs().size() - 1;
+
+        if (selectionModel.isSelected(lastTabIndex))
+        {
+            System.out.println(contentTabPane.getTabs().size());
+            selectionModel.selectFirst();
+        }
+        else
+        {
+            selectionModel.selectNext();
+        }
+    }
+
+    /**
+     * switches the selected tab in the top
+     * to the the previous one
+     **/
+    private void switchToPreviousTab()
+    {
+        SingleSelectionModel selectionModel =
+            contentTabPane.getSelectionModel();
+
+        if (selectionModel.isSelected(0))
+        {
+            selectionModel.selectLast();
+        }
+        else
+        {
+            contentTabPane.getSelectionModel().selectPrevious();
         }
     }
 
@@ -814,6 +874,11 @@ public class MainPage
         if (e.getCode() == KeyCode.CONTROL)
         {
             controlKeyDown = false;
+        }
+
+        if (e.getCode() == KeyCode.SHIFT)
+        {
+            shiftKeyDown = false;
         }
     }
 }
