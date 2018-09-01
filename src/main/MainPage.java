@@ -556,9 +556,7 @@ public class MainPage
         }
         catch (IOException e)
         {
-            System.out.println(
-                "Error in reading a file: " +
-                e.getMessage());
+            e.printStackTrace();
         }
         finally
         {
@@ -575,9 +573,7 @@ public class MainPage
             }
             catch (IOException e)
             {
-                System.out.println(
-                    "Error in closing file reader: " +
-                    e.getMessage());
+                e.printStackTrace();
             }
         }
     }
@@ -653,9 +649,7 @@ public class MainPage
         }
         catch (IOException e)
         {
-            System.out.println(
-                "Error in writing to a file: " +
-                e.getMessage());
+            e.printStackTrace();
         }
         finally
         {
@@ -672,9 +666,7 @@ public class MainPage
             }
             catch (IOException e)
             {
-                System.out.println(
-                    "Error in closing file writer: " +
-                    e.getMessage());
+                e.printStackTrace();
             }
         }
     }
@@ -721,7 +713,7 @@ public class MainPage
         }
         catch (Exception e)
         {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -734,9 +726,7 @@ public class MainPage
         }
         catch (Exception e)
         {
-            System.out.println(
-                "Error in opening about page: " +
-                e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -749,9 +739,7 @@ public class MainPage
         }
         catch (Exception e)
         {
-            System.out.println(
-                "Error in opening license page: " +
-                e.getMessage());
+            e.printStackTrace();
         }
     }
 
