@@ -141,6 +141,10 @@ public class MainPage
         contentTabPane.getTabs().get(0).setText("untitled");
     }
 
+    /**
+     * runs when the user switches
+     * the currently selected tab at the top
+     **/
     private void onTabChange(int newIndex)
     {
         content
@@ -154,7 +158,9 @@ public class MainPage
 
         content
             .textProperty()
-            .bindBidirectional(contentTabs.get(selectedTabIndex).textProperty);
+            .bindBidirectional(contentTabs
+                .get(selectedTabIndex)
+                .textProperty);
 
         updateLineNumberCount();
         updateBottomColumnNumber();
@@ -282,7 +288,9 @@ public class MainPage
      **/
     private void onContentCaretPositionChange(Number position)
     {
-        int lineNumber = contentTabs.get(selectedTabIndex).getLine((int)position);
+        int lineNumber = contentTabs
+            .get(selectedTabIndex)
+            .getLine((int)position);
 
         updateBottomColumnNumber();
         updateBottomLengthNumber();
@@ -353,10 +361,15 @@ public class MainPage
      **/
     private void updateBottomLengthNumber()
     {
-        int line = contentTabs.get(selectedTabIndex).getLine(content.getCaretPosition());
+        int line = contentTabs
+            .get(selectedTabIndex)
+            .getLine(content.getCaretPosition());
+
         bottomLineLengthNumber.setText(
             ", Length: " +
-            contentTabs.get(selectedTabIndex).getLineLength(line));
+            contentTabs
+                .get(selectedTabIndex)
+                .getLineLength(line));
     }
 
     /**
@@ -365,7 +378,10 @@ public class MainPage
      **/
     private void onLineNumberScroll()
     {
-        ScrollPane pane = ((ScrollPane)content.getChildrenUnmodifiable().get(0));
+        ScrollPane pane = ((ScrollPane)content
+            .getChildrenUnmodifiable()
+            .get(0));
+
         pane.setVvalue(lineNumberScrollPane.getVvalue());
     }
 
@@ -386,7 +402,10 @@ public class MainPage
      **/
     private void setLineNumberScrollValueToContentValue()
     {
-        ScrollPane pane = ((ScrollPane)content.getChildrenUnmodifiable().get(0));
+        ScrollPane pane = ((ScrollPane)content
+            .getChildrenUnmodifiable()
+            .get(0));
+
         lineNumberScrollPane.setVvalue(pane.getVvalue());
     }
 
@@ -397,14 +416,22 @@ public class MainPage
      **/
     private void updateLineNumberCount()
     {
-        int lineCount = contentTabs.get(selectedTabIndex).getLineCount();
-        int numberCount = lineNumberContainer.getChildren().size();
+        int lineCount = contentTabs
+                .get(selectedTabIndex)
+                .getLineCount();
+
+        int numberCount = lineNumberContainer
+                .getChildren()
+                .size();
 
         // removing if too many
         // (the user deleted some)
         if (lineCount < numberCount)
         {
-            lineNumberContainer.getChildren().remove(lineCount, numberCount);
+            lineNumberContainer
+                .getChildren()
+                .remove(lineCount, numberCount);
+
             return;
         }
 
@@ -415,7 +442,10 @@ public class MainPage
             addLineNumberEntry();
         }
 
-        int lineNumber = contentTabs.get(selectedTabIndex).getLine(content.getCaretPosition());
+        int lineNumber = contentTabs
+            .get(selectedTabIndex)
+            .getLine(content.getCaretPosition());
+
         setLineNumberLabelActive(lineNumber);
     }
 
@@ -525,13 +555,18 @@ public class MainPage
 
             selectedTab.file = file;
             loadContent(file.getPath());
-            contentTabs.get(selectedTabIndex).entry.setText(file.getName());
+            contentTabs
+                .get(selectedTabIndex)
+                .entry
+                .setText(file.getName());
         }
     }
 
     private void selectContentTab(int index)
     {
-        contentTabPane.getSelectionModel().select(index);
+        contentTabPane
+            .getSelectionModel()
+            .select(index);
     }
 
     /**
@@ -621,7 +656,10 @@ public class MainPage
             selectedTab.file = file;
             selectedTab.contentWasModified = false;
             saveContent(file.getPath());
-            contentTabs.get(selectedTabIndex).entry.setText(file.getName());
+            contentTabs
+                .get(selectedTabIndex)
+                .entry
+                .setText(file.getName());
             return true;
         }
         return false;
