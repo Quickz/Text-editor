@@ -46,7 +46,7 @@ public class ContentTabTests
     }
 
     @Test
-    public void lineCountOfContent()
+    public void lineCountOfContent1()
     {
         ContentTab contentTab = new ContentTab();
         contentTab.setText(
@@ -55,6 +55,15 @@ public class ContentTabTests
             "line count method");
         int lineCount = contentTab.getLineCount();
         Assertions.assertEquals(3, lineCount);
+    }
+
+    @Test
+    public void lineCountOfContent2()
+    {
+        ContentTab contentTab = new ContentTab();
+        contentTab.setText("H\ne\nl\nl\no\n,\n \nw\no\nr\nl\nd");
+        int lineCount = contentTab.getLineCount();
+        Assertions.assertEquals(12, lineCount);
     }
 
     @Test
@@ -88,7 +97,7 @@ public class ContentTabTests
     }
 
     @Test
-    public void getColumnInContent()
+    public void getColumnInContent1()
     {
         ContentTab contentTab = new ContentTab();
         contentTab.setText(
@@ -102,6 +111,18 @@ public class ContentTabTests
     }
 
     @Test
+    public void getColumnInContent2()
+    {
+        ContentTab contentTab = new ContentTab();
+        contentTab.setText(
+            "Line one\n" +
+            "Line two\n" +
+            "Line three");
+        int column = contentTab.getColumn(9);
+        Assertions.assertEquals(1, column);
+    }
+
+    @Test
     public void getLineInEmptyContent()
     {
         ContentTab contentTab = new ContentTab();
@@ -110,7 +131,7 @@ public class ContentTabTests
     }
 
     @Test
-    public void getLineInContent()
+    public void getLineInContent1()
     {
         ContentTab contentTab = new ContentTab();
         contentTab.setText(
@@ -118,5 +139,19 @@ public class ContentTabTests
             "For testing get line method");
         int line = contentTab.getLine(15);
         Assertions.assertEquals(2, line);
+    }
+
+    @Test
+    public void getLineInContent2()
+    {
+        ContentTab contentTab = new ContentTab();
+        contentTab.setText(
+            "First line\n" +
+            "Second line\n" +
+            "Third line\n" +
+            "Four line\n" +
+            "Five line");
+        int line = contentTab.getLine(24);
+        Assertions.assertEquals(3, line);
     }
 }
