@@ -81,7 +81,7 @@ public class MainPage
         contentTabPane
             .getTabs()
             .get(selectedTabIndex)
-            .setOnCloseRequest(e -> onFirstTabClose(e));
+            .setOnCloseRequest(e -> onTabClose(e, selectedTab));
 
         contentTabPane
             .getSelectionModel()
@@ -121,24 +121,6 @@ public class MainPage
         updateLineNumberCount();
         updateBottomColumnNumber();
         updateBottomLengthNumber();
-    }
-
-    /**
-     * a separate method for the first
-     * tab which resets it instead of closing
-     **/
-    private void onFirstTabClose(Event event)
-    {
-        if (event != null)
-        {
-            event.consume();
-        }
-
-        ContentTab firstTab = contentTabs.get(0);
-        firstTab.contentWasModified = false;
-        firstTab.file = null;
-        firstTab.setText("");
-        contentTabPane.getTabs().get(0).setText("untitled");
     }
 
     /**
@@ -197,11 +179,17 @@ public class MainPage
      **/
     private void onTabClose(Event event, ContentTab tab)
     {
-        System.out.println("closing");
-
         if (event != null)
         {
             event.consume();
+        }
+
+        int tabIndex = contentTabs.indexOf(tab);
+
+        if (contentTabs.size() == 1 && tabIndex == 0)
+        {
+            resetTab(tab);
+            return;
         }
 
         try
@@ -211,12 +199,14 @@ public class MainPage
                 removeSelectedTab();
                 contentTabs.remove(tab);
 
-                if (contentTabs.size() == 0)
+                // if the first tab is removed
+                // the selected index is the same
+                // so the on tab change has to get called manually
+                if (tabIndex == 0)
                 {
-                    addNewContentTab();
+                    onTabChange(0);
                 }
 
-                generateNewFile();
                 return;
             }
 
@@ -230,12 +220,10 @@ public class MainPage
                     removeSelectedTab();
                     contentTabs.remove(tab);
 
-                    if (contentTabs.size() == 0)
+                    if (tabIndex == 0)
                     {
-                        addNewContentTab();
+                        onTabChange(0);
                     }
-
-                    generateNewFile();
                 }
             }
             else if (response.equals("dontSave"))
@@ -243,10 +231,9 @@ public class MainPage
                 removeSelectedTab();
                 contentTabs.remove(tab);
 
-                if (contentTabs.size() == 0)
+                if (tabIndex == 0)
                 {
-                    addNewContentTab();
-                    generateNewFile();
+                    onTabChange(0);
                 }
             }
         }
@@ -254,6 +241,20 @@ public class MainPage
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * resets the contents of the
+     * specified tab
+     **/
+    private void resetTab(ContentTab firstTab)
+    {
+        int index = contentTabs.indexOf(firstTab);
+
+        firstTab.contentWasModified = false;
+        firstTab.file = null;
+        firstTab.setText("");
+        contentTabPane.getTabs().get(index).setText("untitled");
     }
 
     /**
@@ -270,6 +271,7 @@ public class MainPage
         Tab tabInTheTop = contentTabPane
             .getSelectionModel()
             .getSelectedItem();
+
         contentTabPane.getTabs().remove(tabInTheTop);
     }
 
