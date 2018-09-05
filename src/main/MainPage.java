@@ -354,7 +354,8 @@ public class MainPage
     {
         int position = content.getCaretPosition();
         bottomColumnNumber.setText(
-            ", Column: " + contentTabs.get(selectedTabIndex).getColumn(position));
+            ", Column: " +
+            contentTabs.get(selectedTabIndex).getColumn(position));
     }
 
     /**
@@ -529,12 +530,6 @@ public class MainPage
         addNewContentTab();
     }
 
-    private void generateNewFile()
-    {
-        content.clear();
-        selectedTab.contentWasModified = false;
-    }
-
     @FXML
     private void open()
     {
@@ -564,6 +559,10 @@ public class MainPage
         }
     }
 
+    /**
+     * selects a tab in the top
+     *
+     **/
     private void selectContentTab(int index)
     {
         contentTabPane
