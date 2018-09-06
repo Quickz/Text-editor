@@ -1,18 +1,58 @@
-#lineNumberContainer {
+#lineNumberContainer
+{
     -fx-padding: 2.5 0 0 0;
 }
 
-#lineNumberContainer .label {
+#lineNumberContainer .label
+{
     -fx-font-size: 12;
     -fx-font-family: Consolas;
     -fx-padding: 0 10;
 }
 
-.lineNumberActive {
+.lineNumberActive
+{
     -fx-background-color: #c3c3c3;
 }
 
-#content {
+#content
+{
     -fx-font-size: 12;
     -fx-font-family: Consolas;
+}
+
+#contentTabPane
+{
+    -fx-tab-min-width: 100;
+    -fx-tab-max-width: 200;
+}
+
+/**
+ * element which contains
+ * the tabs
+ **/
+#contentTabPane .tab-header-area
+{
+    -fx-padding: 0;
+}
+
+#contentTabPane .tab
+{
+    -fx-background-color: #f0f0f0;
+    -fx-text-base-color: #111111;
+    -fx-background-radius: 0;
+    -fx-padding: 1 5 1 5;
+    -fx-font-size: 14;
+
+}
+
+#contentTabPane .tab:selected
+{
+    -fx-background-color: #ffffff;
+}
+
+.tab .tab-close-button
+{
+    -fx-alignment: center-right;
+    -fx-background-color: #333333;
 }
