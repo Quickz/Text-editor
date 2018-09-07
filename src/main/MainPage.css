@@ -56,3 +56,8 @@
     -fx-alignment: center-right;
     -fx-background-color: #333333;
 }
+
+#menuBar
+{
+    -fx-background-color: #ffffff;
+}
