@@ -36,6 +36,12 @@
     -fx-padding: 0;
 }
 
+#contentTabPane .tab-header-background
+{
+    -fx-background-color: #c3c3c3;
+    -fx-effect: null;
+}
+
 #contentTabPane .tab
 {
     -fx-background-color: #f0f0f0;
@@ -43,7 +49,6 @@
     -fx-background-radius: 0;
     -fx-padding: 1 5 1 5;
     -fx-font-size: 14;
-
 }
 
 #contentTabPane .tab:selected
