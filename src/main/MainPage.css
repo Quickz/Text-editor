@@ -15,10 +15,38 @@
     -fx-background-color: #c3c3c3;
 }
 
+/**
+ * text area which contains
+ * all of the text editor visible text
+ **/
 #content
 {
     -fx-font-size: 12;
     -fx-font-family: Consolas;
+
+    -fx-background-insets: 0;
+    -fx-background-color:
+        transparent, white,
+        transparent, white;
+}
+
+#content .content
+{
+    -fx-background-color:
+        transparent, white,
+        transparent, white;
+}
+
+#content:focused .content
+{
+    -fx-background-color:
+        transparent, white,
+        transparent, white;
+}
+
+#content .content
+{
+    -fx-padding: 3;
 }
 
 #contentTabPane
