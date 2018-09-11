@@ -255,6 +255,7 @@ public class MainPage
         firstTab.file = null;
         firstTab.setText("");
         contentTabPane.getTabs().get(index).setText("untitled");
+        updateLineNumberCount();
     }
 
     /**
