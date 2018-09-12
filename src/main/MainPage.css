@@ -88,4 +88,15 @@
 #menuBar
 {
     -fx-background-color: #ffffff;
+    -fx-padding: 0;
+}
+
+#menuBar .context-menu
+{
+    -fx-padding: 0;
+}
+
+#menuBar .menu-item
+{
+    -fx-padding: 4 20;
 }
