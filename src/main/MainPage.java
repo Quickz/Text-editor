@@ -1,9 +1,9 @@
 package main;
 
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
+import javafx.beans.property.DoubleProperty;
+import javafx.collections.ListChangeListener;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -57,15 +57,32 @@ public class MainPage
     private Boolean controlKeyDown = false;
     private Boolean shiftKeyDown = false;
 
+    // true if the scroll bar value of line number container
+    // is bound to content scroll bar value
+    private boolean lineScrollValueBoundToContent = false;
+
     @FXML
     private void initialize()
     {
         //DeveloperCommands.FillTextArea(content);
 
-        content.scrollTopProperty().addListener(
-            (obs, oldVal, newVal) -> onContentScroll());
-        lineNumberScrollPane.vvalueProperty().addListener(
-            (obs, oldVal, newVal) -> onLineNumberScroll());
+        //content.scrollTopProperty().addListener(
+        //    (obs, oldVal, newVal) -> onContentScroll());
+        //lineNumberScrollPane.vvalueProperty().addListener(
+        //    (obs, oldVal, newVal) -> onLineNumberScroll());
+
+        /*
+        ScrollPane contentPane = ((ScrollPane)content
+                .getChildrenUnmodifiable()
+                .get(0));*/
+
+        // as soon as the scrollbar element is added
+        // to the content, it's value will be bound
+        // to the line number container's scrollbar
+        content
+            .getChildrenUnmodifiable()
+            .addListener((ListChangeListener)(c ->
+                    bindLineNumberScrollWithContentScroll()));
 
         content
             .caretPositionProperty()
@@ -100,6 +117,33 @@ public class MainPage
         // made the hbox element stretch based
         // on the content text field
         HBox.setHgrow(content, Priority.ALWAYS);
+    }
+
+    /**
+     * binds the line number container's scroll bar value
+     * to the content scroll bar value so they mirror
+     * each other's position
+     * --------------------------
+     * this method runs only once
+     **/
+    private void bindLineNumberScrollWithContentScroll()
+    {
+        if (lineScrollValueBoundToContent)
+        {
+            return;
+        }
+
+        lineScrollValueBoundToContent = true;
+        ScrollPane contentPane = ((ScrollPane)content
+            .getChildrenUnmodifiable()
+            .get(0));
+
+        DoubleProperty lineNumberValue =
+            lineNumberScrollPane.vvalueProperty();
+
+        contentPane
+            .vvalueProperty()
+            .bindBidirectional(lineNumberValue);
     }
 
     /**
@@ -298,10 +342,6 @@ public class MainPage
         updateBottomColumnNumber();
         updateBottomLengthNumber();
 
-        // updating scroll position since there may be
-        // new line entry from udating line number count
-        setLineNumberScrollValueToContentValue();
-
         // if false, a new line was created, so setting line
         // number active at updateLineNumberCount() method instead
         if (lineNumberContainer.getChildren().size() >= lineNumber)
@@ -374,43 +414,6 @@ public class MainPage
             contentTabs
                 .get(selectedTabIndex)
                 .getLineLength(line));
-    }
-
-    /**
-     * when scrolling line number container
-     * the content element mirrors the scroll position
-     **/
-    private void onLineNumberScroll()
-    {
-        ScrollPane pane = ((ScrollPane)content
-            .getChildrenUnmodifiable()
-            .get(0));
-
-        pane.setVvalue(lineNumberScrollPane.getVvalue());
-    }
-
-    /**
-     * when scrolling content text area
-     * the line number container element
-     * mirrors the scroll position
-     **/
-    private void onContentScroll()
-    {
-        setLineNumberScrollValueToContentValue();
-    }
-
-    /**
-     * assigns the content scroll position
-     * to the line number container scroll
-     * position
-     **/
-    private void setLineNumberScrollValueToContentValue()
-    {
-        ScrollPane pane = ((ScrollPane)content
-            .getChildrenUnmodifiable()
-            .get(0));
-
-        lineNumberScrollPane.setVvalue(pane.getVvalue());
     }
 
     /**
